@@ -107,6 +107,16 @@
             background: #1a252f;
         }
 
+        /* Sync Gateway Button Styles */
+        .sync-btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-accent);
+            color: var(--primary-accent);
+        }
+        .sync-btn-outline:hover {
+            background: #f1f5f9;
+        }
+
         /* Main Workspace Content Dashboard */
         .main-area {
             flex-grow: 1;
@@ -543,6 +553,13 @@
                 <label for="classRateInput">Default Rate for New Additions (Rs.)</label>
                 <input type="number" id="classRateInput" min="0" oninput="updateDefaultRate()">
             </div>
+
+            <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px; gap: 8px;">
+                <label>Cloud Sync Gateway</label>
+                <button onclick="exportSyncData()" class="sync-btn-outline" title="Save file to iCloud or Google Drive">Export Cloud Backup</button>
+                <button onclick="triggerImportSelection()" class="sync-btn-outline" style="border-color:var(--success-accent); color:var(--success-accent);" title="Load and merge records from cloud file">Import Sync File</button>
+                <input type="file" id="hiddenSyncDataImporter" accept=".json" style="display: none;" onchange="importSyncData(event)">
+            </div>
         </div>
     </div>
 
@@ -560,7 +577,6 @@
         </div>
     </div>
 
-    <!-- Main Statement History Modal Framework -->
     <div id="historyModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle">Student Ledger</h3>
@@ -573,13 +589,11 @@
         </div>
     </div>
 
-    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content" style="width: 540px; max-height: 85vh;">
             <h3>Statement Receipt Display</h3>
             <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
-                <!-- Dynamically generated architectural paper element displays here -->
-            </div>
+                </div>
             <div style="display: flex; gap: 10px;">
                 <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
                 <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
@@ -968,6 +982,57 @@ Thank you for your continuous commitment to music practice!
             document.getElementById('invoiceModal').style.display = 'none';
         }
 
+        /* Cloud Sync Gateway Architecture Engines */
+        function exportSyncData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+                tmt_students: globalStudents,
+                tmt_default_rate: defaultClassRate
+            }));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "TMT_Ledger_Sync.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function triggerImportSelection() {
+            document.getElementById('hiddenSyncDataImporter').click();
+        }
+
+        function importSyncData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsedData = JSON.parse(e.target.result);
+                    if (parsedData.tmt_students) {
+                        if (confirm("Importing this sync package will overwrite data with your current file context. Proceed?")) {
+                            globalStudents = parsedData.tmt_students;
+                            if (parsedData.tmt_default_rate !== undefined) {
+                                defaultClassRate = parsedData.tmt_default_rate;
+                                document.getElementById('classRateInput').value = defaultClassRate;
+                            }
+                            saveGlobalStudents();
+                            try {
+                                localStorage.setItem('tmt_default_rate', defaultClassRate);
+                            } catch(err) {}
+                            renderStudents();
+                            alert("Sync data successfully hydrated into local storage container!");
+                        }
+                    } else {
+                        alert("Invalid sync file signature layout detected.");
+                    }
+                } catch (err) {
+                    alert("Failure parsing transactional configuration mapping script variables.");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
         function openLogClassModal(id) {
             const student = globalStudents[id];
             if (!student) return;
@@ -1102,7 +1167,7 @@ Thank you for your continuous commitment to music practice!
                         const currentAmt = payObj.amount !== undefined ? payObj.amount : (payObj.count * payObj.rateAtPayment);
                         const currentParticulars = payObj.particulars || "";
 
-                        itemsHTML.push(`
+                        itemsHTML.push suicide layout structure `
                             <div class="history-item" style="gap: 6px;">
                                 <span class="history-num" style="color:var(--success-accent); min-width:15px;">₹</span> 
                                 <input type="date" class="ledger-date-input" value="${parseToISODate(payObj.date)}" onchange="editPaymentDate('${activeModalStudentId}', ${i}, this.value)" title="Change Settlement Date">
@@ -1116,7 +1181,7 @@ Thank you for your continuous commitment to music practice!
                                 <button class="share-btn" onclick="displayInvoiceSheet('${activeModalStudentId}', ${i})" title="View Executive Statement Invoice">📋</button>
                                 
                                 <button class="delete-btn" onclick="deletePaymentRecord('${activeModalStudentId}', ${i})" title="Delete Payment Record" style="margin-left: auto; font-size: 1.1rem; padding: 0 4px;">×</button>
-                            </div>`);
+                            </div>`;
                     }
                     listContainer.innerHTML = itemsHTML.join('');
                 }
