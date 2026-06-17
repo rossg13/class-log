@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheMusicTeacher - Ledger & Tracker</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --panel-bg: #ffffff;
+            --card-bg: #ffffff;
+            --primary-accent: #2c3e50; /* Prestige Charcoal Blue */
+            --secondary-accent: #7f8c8d;
+            --warning-accent: #d35400; /* Soft Amber for Due balances */
+            --success-accent: #27ae60; /* Elegant Emerald */
+            --text-main: #2c3e50;
+            --text-muted: #6c757d;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 320px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            box-sizing: border-box;
+            z-index: 10;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+        }
+
+        h1 {
+            color: var(--primary-accent);
+            margin-top: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-accent);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            padding: 10px 12px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--text-main);
+            border-radius: 6px;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.08);
+        }
+
+        button {
+            padding: 11px 16px;
+            background: var(--primary-accent);
+            color: #ffffff;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #1a252f;
+        }
+
+        /* Main Workspace Content Dashboard */
+        .main-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+
+        .dashboard-header {
+            background: var(--panel-bg);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.01);
+        }
+
+        .dashboard-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-accent);
+        }
+
+        .dashboard-title span {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-left: 8px;
+        }
+
+        /* Aggregated Financial Summary Badge */
+        .global-summary-badge {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #7c2d12;
+            background: #fff7ed; 
+            border: 1px solid #ffedd5;
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .global-summary-badge strong {
+            font-size: 1.05rem;
+            color: var(--warning-accent);
+        }
+
+        .tracker-grid-container {
+            flex-grow: 1;
+            padding: 32px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .student-dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+        }
+
+        /* Student Tracking Cards */
+        .student-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-accent);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .student-card.unpaid-warning {
+            border-left-color: var(--warning-accent);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 0;
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .delete-btn:hover {
+            color: #ef4444;
+            background: none;
+        }
+
+        .card-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ledger-info-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .calendar-icon {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.15s, transform 0.15s;
+            font-size: 0.95rem;
+        }
+
+        .calendar-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Inline Card Rate Input Field */
+        .card-rate-input {
+            width: 70px;
+            padding: 3px 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            outline: none;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .card-rate-input:focus {
+            border-color: var(--primary-accent);
+            background: #fdfdfd;
+        }
+
+        /* Interactive Ledger Date/Text Editor Inputs */
+        .ledger-date-input, .ledger-amount-input, .ledger-text-input {
+            border: 1px solid transparent;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #475569;
+            padding: 2px 6px;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .ledger-date-input { cursor: pointer; width: 100px; }
+        .ledger-amount-input { width: 60px; font-weight: 600; }
+        .ledger-text-input { width: 95px; }
+
+        .ledger-date-input:hover, .ledger-date-input:focus,
+        .ledger-amount-input:hover, .ledger-amount-input:focus,
+        .ledger-text-input:hover, .ledger-text-input:focus {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .stat-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--text-main);
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .stat-btn:hover { 
+            border-color: var(--primary-accent); 
+            background: #f8f9fa; 
+        }
+
+        .pay-btn { 
+            border-color: var(--success-accent); 
+            color: var(--success-accent); 
+        }
+        
+        .pay-btn:hover { 
+            background: var(--success-accent); 
+            color: #ffffff; 
+            border-color: var(--success-accent);
+        }
+
+        /* Share Icon Button Style */
+        .share-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 6px;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+        .share-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Modal Layout System */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 24px;
+            width: 580px; 
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            max-height: 75vh;
+            transition: width 0.2s ease;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-accent);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            gap: 15px;
+        }
+
+        .modal-tab {
+            padding: 6px 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .modal-tab.active {
+            color: var(--primary-accent);
+            font-weight: 600;
+            border-bottom-color: var(--primary-accent);
+        }
+
+        #historyList { 
+            overflow-y: auto; 
+            margin-bottom: 20px; 
+            flex-grow: 1; 
+        }
+
+        .history-item { 
+            padding: 8px 0; 
+            border-bottom: 1px solid #f1f5f9; 
+            color: #475569; 
+            display: flex; 
+            align-items: center;
+            gap: 8px; 
+            font-size: 0.88rem;
+        }
+
+        .history-num { 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            min-width: 25px; 
+        }
+
+        .modal-content button {
+            background: var(--primary-accent);
+            color: white;
+            border: none;
+        }
+
+        .modal-content button:hover {
+            background: #1a252f;
+        }
+
+        .modal-body-spacing {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-body-spacing label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            color: var(--text-muted);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 0.95rem;
+        }
+
+        /* Sophisticated Invoice Layout Styles */
+        .invoice-paper {
+            background: #ffffff;
+            padding: 32px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.01);
+        }
+        .invoice-brand-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--primary-accent);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        .invoice-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-accent);
+        }
+        .invoice-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        .invoice-meta-label {
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        .invoice-table th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 8px 12px;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .invoice-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .invoice-total-row {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+            border-top: 2px solid #cbd5e1;
+            padding-top: 12px;
+        }
+
+        /* Scrollbars styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1>Studio Ledger</h1>
+        <div class="controls">
+            <div class="control-group">
+                <label for="studentName">Add New Student</label>
+                <input type="text" id="studentName" placeholder="Enter full name..." onkeydown="handleKeyDown(event)">
+            </div>
+            <button onclick="addStudent()">Add Student to Roster</button>
+            
+            <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px;">
+                <label for="classRateInput">Default Rate for New Additions (Rs.)</label>
+                <input type="number" id="classRateInput" min="0" oninput="updateDefaultRate()">
+            </div>
+        </div>
+    </div>
+
+    <div class="main-area">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Active Matrix Roster <span id="rosterCount">(0 Students Total)</span></div>
+            <div class="global-summary-badge">
+                Total Portfolio Due: <strong id="globalOutstandingSum">Rs. 0</strong>
+            </div>
+        </div>
+
+        <div class="tracker-grid-container">
+            <div class="student-dashboard-grid" id="studentGrid">
+                </div>
+        </div>
+    </div>
+
+    <!-- Main Statement History Modal Framework -->
+    <div id="historyModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle">Student Ledger</h3>
+            <div class="modal-tabs">
+                <div class="modal-tab active" id="tab-lessons" onclick="switchHistoryTab('lessons')">Lessons Log</div>
+                <div class="modal-tab" id="tab-payments" onclick="switchHistoryTab('payments')">Payment History</div>
+            </div>
+            <div id="historyList"></div>
+            <button onclick="closeModal()">Close Records</button>
+        </div>
+    </div>
+
+    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
+    <div id="invoiceModal" class="modal-overlay">
+        <div class="modal-content" style="width: 540px; max-height: 85vh;">
+            <h3>Statement Receipt Display</h3>
+            <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
+                <!-- Dynamically generated architectural paper element displays here -->
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
+                <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
+                <button onclick="closeInvoiceModal()" style="background: #ffffff; color: var(--primary-accent); border: 1px solid #cbd5e1;">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="actionModal" class="modal-overlay">
+        <div class="modal-content" style="width: 380px;">
+            <h3 id="actionTitle">Log Event</h3>
+            <div class="modal-body-spacing">
+                <label id="actionLabel">Select Target Date Layout:</label>
+                <input type="date" id="actionDatePicker">
+            </div>
+            <div class="modal-body-spacing" id="actionParticularsGroup" style="display: none;">
+                <label for="actionParticularsInput">Particulars / Notes:</label>
+                <input type="text" id="actionParticularsInput" placeholder="e.g., GPay, Cash, Month settlement...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="actionConfirmBtn" style="flex: 1;">Confirm Entry</button>
+                <button onclick="closeActionModal()" style="flex: 1; background: #ffffff; color: var(--primary-accent); border: 1px solid var(--primary-accent);">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let globalStudents = {};
+        let activeModalStudentId = null;
+        let activeActionData = null; 
+        let defaultClassRate = 1200;
+
+        try {
+            globalStudents = JSON.parse(localStorage.getItem('tmt_students')) || {};
+            defaultClassRate = parseInt(localStorage.getItem('tmt_default_rate')) || 1200;
+        } catch (e) {
+            console.warn("Storage runtime bounds restricted. Switching to volatile context.");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('classRateInput').value = defaultClassRate;
+            renderStudents();
+        });
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter') {
+                addStudent();
+            }
+        }
+
+        function updateDefaultRate() {
+            const inputVal = document.getElementById('classRateInput').value;
+            defaultClassRate = parseInt(inputVal) || 0;
+            try {
+                localStorage.setItem('tmt_default_rate', defaultClassRate);
+            } catch(e) {}
+        }
+
+        function updateStudentSpecificRate(id, element) {
+            const newRate = parseInt(element.value) || 0;
+            if (globalStudents[id]) {
+                globalStudents[id].rate = newRate;
+                saveGlobalStudents();
+                renderStudents();
+            }
+        }
+
+        function calculateUnpaidClasses(student) {
+            let totalPaidClasses = 0;
+            if (student.payments) {
+                student.payments.forEach(p => {
+                    totalPaidClasses += (parseInt(p.count) || 0);
+                });
+            }
+            return Math.max(0, student.totalClasses - totalPaidClasses);
+        }
+
+        function renderStudents() {
+            const gridContainer = document.getElementById('studentGrid');
+            gridContainer.innerHTML = '';
+            
+            const studentIds = Object.keys(globalStudents);
+            document.getElementById('rosterCount').innerText = `(${studentIds.length} Student${studentIds.length !== 1 ? 's' : ''} Total)`;
+
+            let runningTotalOutstanding = 0;
+
+            if (studentIds.length === 0) {
+                document.getElementById('globalOutstandingSum').innerText = "Rs. 0";
+                gridContainer.innerHTML = `
+                    <div class="empty-state">
+                        <strong>No Active Accounts Found</strong><br>
+                        <span style="font-size: 0.85rem; color:#94a3b8; display:inline-block; margin-top:6px;">
+                            Enter a student's name on the left sidebar framework to manage class sessions and billing statements.
+                        </span>
+                    </div>`;
+                return;
+            }
+
+            studentIds.forEach(id => {
+                const data = globalStudents[id];
+                
+                if (data.rate === undefined) {
+                    data.rate = defaultClassRate;
+                }
+
+                data.unpaidClasses = calculateUnpaidClasses(data);
+                runningTotalOutstanding += (data.unpaidClasses * data.rate);
+
+                const card = document.createElement('div');
+                card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
+                
+                const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>${data.name}</span>
+                        <button class="delete-btn" onclick="deleteStudent('${id}')" title="Remove Profile">×</button>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="ledger-info-group">
+                                Rate (Rs.): 
+                                <input type="number" class="card-rate-input" min="0" value="${data.rate}" onchange="updateStudentSpecificRate('${id}', this)">
+                                / class
+                            </span>
+                        </div>
+                        <div class="stat-row" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                            <div class="ledger-info-group">
+                                <span>Classes Logged: <strong>${data.totalClasses}</strong></span>
+                                <span class="calendar-icon" onclick="viewHistory('${id}')" title="Open Ledger View">📅</span>
+                            </div>
+                            <button class="stat-btn" onclick="openLogClassModal('${id}')">+1 Class</button>
+                        </div>
+                        <div class="stat-row">
+                            <span style="color: ${data.unpaidClasses > 0 ? 'var(--warning-accent)' : 'var(--text-muted)'}; font-weight: ${data.unpaidClasses > 0 ? '600' : 'normal'}">
+                                Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong> (${data.unpaidClasses} cls)
+                            </span>
+                            <button class="stat-btn pay-btn" onclick="openPayClassModal('${id}')">Record Paid</button>
+                        </div>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+
+            document.getElementById('globalOutstandingSum').innerText = `Rs. ${runningTotalOutstanding.toLocaleString('en-IN')}`;
+        }
+
+        function addStudent() {
+            const input = document.getElementById('studentName');
+            const name = input.value.trim();
+            if (!name) {
+                alert("Please enter a valid student name.");
+                return;
+            }
+
+            const id = 'student-' + Date.now();
+            globalStudents[id] = {
+                name: name,
+                rate: defaultClassRate,
+                totalClasses: 0,
+                unpaidClasses: 0,
+                dates: [],
+                payments: []
+            };
+            
+            saveGlobalStudents();
+            renderStudents();
+            input.value = '';
+        }
+
+        function deleteStudent(id) {
+            if(confirm(`Permanently remove all tracking accounts and architectural payment metrics for ${globalStudents[id].name}?`)) {
+                delete globalStudents[id];
+                saveGlobalStudents();
+                renderStudents();
+            }
+        }
+
+        function parseToISODate(dmyString) {
+            const parts = dmyString.split('/');
+            if(parts.length !== 3) return new Date().toISOString().split('T')[0];
+            return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+
+        function formatToDisplayDate(isoString) {
+            const parts = isoString.split('-');
+            if(parts.length !== 3) return new Date().toLocaleDateString('en-GB');
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        function editLoggedDate(studentId, arrayIndex, newISODate) {
+            if (!newISODate) return;
+            const student = globalStudents[studentId];
+            if (student && student.dates && student.dates[arrayIndex] !== undefined) {
+                student.dates[arrayIndex] = formatToDisplayDate(newISODate);
+                saveGlobalStudents();
+            }
+        }
+
+        function deleteLoggedDate(studentId, arrayIndex) {
+            const student = globalStudents[studentId];
+            if (student && student.dates && student.dates[arrayIndex] !== undefined) {
+                if (confirm(`Permanently delete session #${arrayIndex + 1} (${student.dates[arrayIndex]})? This balances active counts accordingly.`)) {
+                    student.dates.splice(arrayIndex, 1);
+                    student.totalClasses = Math.max(0, student.totalClasses - 1);
+                    
+                    saveGlobalStudents();
+                    renderStudents();
+                    switchHistoryTab('lessons');
+                }
+            }
+        }
+
+        function editPaymentDate(studentId, arrayIndex, newISODate) {
+            if (!newISODate) return;
+            const student = globalStudents[studentId];
+            if (student && student.payments && student.payments[arrayIndex]) {
+                student.payments[arrayIndex].date = formatToDisplayDate(newISODate);
+                saveGlobalStudents();
+            }
+        }
+
+        function editPaymentAmount(studentId, arrayIndex, newAmount) {
+            const student = globalStudents[studentId];
+            if (student && student.payments && student.payments[arrayIndex]) {
+                student.payments[arrayIndex].amount = parseInt(newAmount) || 0;
+                saveGlobalStudents();
+                renderStudents();
+            }
+        }
+
+        function editPaymentParticulars(studentId, arrayIndex, newParticulars) {
+            const student = globalStudents[studentId];
+            if (student && student.payments && student.payments[arrayIndex]) {
+                student.payments[arrayIndex].particulars = newParticulars;
+                saveGlobalStudents();
+            }
+        }
+
+        function deletePaymentRecord(studentId, arrayIndex) {
+            const student = globalStudents[studentId];
+            if (student && student.payments && student.payments[arrayIndex]) {
+                if (confirm(`Permanently wipe this receipt log entry? Rolling this back balances your active portfolio balances instantly.`)) {
+                    student.payments.splice(arrayIndex, 1);
+                    saveGlobalStudents();
+                    renderStudents();
+                    switchHistoryTab('payments');
+                }
+            }
+        }
+
+        /* Sophisticated Multi-Mode Invoice Generation Framework */
+        function displayInvoiceSheet(studentId, paymentIndex) {
+            const student = globalStudents[studentId];
+            if (!student || !student.payments || !student.payments[paymentIndex]) return;
+
+            const payment = student.payments[paymentIndex];
+            
+            // Calculate slice metrics to parse precise dates
+            let previousPaidCount = 0;
+            for (let i = 0; i < paymentIndex; i++) {
+                previousPaidCount += parseInt(student.payments[i].count) || 0;
+            }
+
+            const startIdx = previousPaidCount;
+            const endIdx = previousPaidCount + (parseInt(payment.count) || 0);
+            const coveredLessonDates = (student.dates || []).slice(startIdx, endIdx);
+
+            let tableRowsHTML = "";
+            if (coveredLessonDates.length === 0) {
+                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">No session date parameters historical logs located.</td></tr>`;
+            } else {
+                tableRowsHTML = coveredLessonDates.map((date, index) => `
+                    <tr>
+                        <td><strong>Class #${startIdx + index + 1}</strong></td>
+                        <td>Session Attendance Completed: ${date}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Create professional design template bounds (Scraping the word Studio)
+            const invoiceHTML = `
+                <div class="invoice-paper" id="printableInvoiceArea">
+                    <div class="invoice-brand-header">
+                        <div>
+                            <div class="invoice-title">TheMusicTeacher</div>
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Premium Music Instruction & Mentorship</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #475569;">INVOICE RECORD</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Ref: #REC-${paymentIndex + 1}-${Date.now().toString().slice(-4)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-meta-grid">
+                        <div>
+                            <div class="invoice-meta-label">Billed To:</div>
+                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${student.name}</div>
+                            <div style="color: #64748b; font-size: 0.85rem;">Active Roster Profile Account</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="invoice-meta-label">Payment Date / Mode:</div>
+                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${payment.date}</div>
+                            <div style="color: var(--success-accent); font-weight: 600; font-size: 0.85rem;">${payment.particulars || "Verified Receipt"}</div>
+                        </div>
+                    </div>
+
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">Particulars</th>
+                                <th>Item Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRowsHTML}
+                        </tbody>
+                    </table>
+
+                    <div class="invoice-total-row">
+                        <span style="font-weight: 500; color: #64748b; font-size: 0.9rem; margin-right: 12px; align-self: center;">Total Settled Balance:</span>
+                        Rs. ${payment.amount.toLocaleString('en-IN')}.00
+                    </div>
+
+                    <div style="margin-top: 32px; border-top: 1px dashed #e2e8f0; padding-top: 16px; text-align: center; font-size: 0.8rem; color: #94a3b8; font-style: italic;">
+                        This document serves as verification of financial settlement regarding musical study sessions listed above. Thank you.
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('invoiceModalBody').innerHTML = invoiceHTML;
+
+            // Context attachment logic configuration for button controllers
+            document.getElementById('invoicePrintBtn').onclick = () => {
+                const invoicePrintWindow = window.open('', '_blank');
+                invoicePrintWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Invoice - ${student.name}</title>
+                        <style>
+                            body { font-family: system-ui, sans-serif; padding: 40px; }
+                            .invoice-paper { background: white; color: #1e293b; }
+                            .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 16px; margin-bottom: 24px; }
+                            .invoice-title { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
+                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
+                            .invoice-meta-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.9rem; }
+                            .invoice-table th { background: #f1f5f9; text-align: left; padding: 8px 12px; border-bottom: 1px solid #cbd5e1; }
+                            .invoice-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+                            .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1.1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 12px; }
+                        </style>
+                    </head>
+                    <body>
+                        ${document.getElementById('printableInvoiceArea').innerHTML}
+                        <script>window.print(); window.close();<\/script>
+                    </body>
+                    </html>
+                `);
+                invoicePrintWindow.document.close();
+            };
+
+            document.getElementById('invoiceCopyTextBtn').onclick = () => {
+                const rawStringText = 
+`🧾 *THEMUSICTEACHER PAYMENT RECEIPT*
+---------------------------------------
+*Student Account:* ${student.name}
+*Settlement Date:* ${payment.date}
+*Amount Cleared:* Rs. ${payment.amount.toLocaleString('en-IN')}
+*Reference Type:* ${payment.particulars || "GPay/Online"}
+*Total Sessions:* ${payment.count} Class(es)
+
+*Classes Accounted For:*
+${coveredLessonDates.map((d, i) => `✓ Class #${startIdx + i + 1} (${d})`).join('\n')}
+
+Thank you for your continuous commitment to music practice!
+---------------------------------------`;
+                navigator.clipboard.writeText(rawStringText).then(() => {
+                    alert("Sophisticated Text Receipt template saved successfully to your clipboard!");
+                });
+            };
+
+            document.getElementById('invoiceModal').style.display = 'flex';
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').style.display = 'none';
+        }
+
+        function openLogClassModal(id) {
+            const student = globalStudents[id];
+            if (!student) return;
+
+            const targetDateStr = new Date().toLocaleDateString('en-GB');
+
+            document.getElementById('actionTitle').innerText = `Log Lesson Session: ${student.name}`;
+            document.getElementById('actionLabel').innerText = "Select specific lesson completion date:";
+            document.getElementById('actionDatePicker').value = parseToISODate(targetDateStr);
+            document.getElementById('actionParticularsGroup').style.display = 'none';
+            
+            activeActionData = { type: 'lesson', studentId: id };
+            document.getElementById('actionConfirmBtn').onclick = submitActionModal;
+            document.getElementById('actionModal').style.display = 'flex';
+        }
+
+        function openPayClassModal(id) {
+            const student = globalStudents[id];
+            if (!student) return;
+
+            const classesOwed = student.unpaidClasses;
+            if (classesOwed === 0) {
+                alert("This specific profile context exhibits zero outstanding arrears balances.");
+                return;
+            }
+
+            const totalAmountDue = classesOwed * student.rate;
+            document.getElementById('actionTitle').innerText = `Record Transaction Receipt: ${student.name}`;
+            document.getElementById('actionLabel').innerText = `Select date payment was received for ${classesOwed} classes (Total: Rs. ${totalAmountDue.toLocaleString('en-IN')} at Rs. ${student.rate}/cls):`;
+            document.getElementById('actionDatePicker').value = new Date().toISOString().split('T')[0];
+            
+            document.getElementById('actionParticularsInput').value = '';
+            document.getElementById('actionParticularsGroup').style.display = 'flex';
+
+            activeActionData = { type: 'payment', studentId: id, classes: classesOwed, amount: totalAmountDue };
+            document.getElementById('actionConfirmBtn').onclick = submitActionModal;
+            document.getElementById('actionModal').style.display = 'flex';
+        }
+
+        function submitActionModal() {
+            if (!activeActionData) return;
+            
+            const rawPickerValue = document.getElementById('actionDatePicker').value;
+            if (!rawPickerValue) {
+                alert("Please select a clear calendar date coordinate map.");
+                return;
+            }
+
+            const formattedDate = formatToDisplayDate(rawPickerValue);
+            const student = globalStudents[activeActionData.studentId];
+
+            if (activeActionData.type === 'lesson') {
+                student.totalClasses++;
+                student.dates.push(formattedDate);
+            } else if (activeActionData.type === 'payment') {
+                student.payments = student.payments || [];
+                const particularsValue = document.getElementById('actionParticularsInput').value.trim();
+                
+                student.payments.push({
+                    date: formattedDate,
+                    count: activeActionData.classes,
+                    amount: activeActionData.amount,
+                    rateAtPayment: student.rate,
+                    particulars: particularsValue || "Received"
+                });
+            }
+
+            saveGlobalStudents();
+            renderStudents();
+            closeActionModal();
+        }
+
+        function closeActionModal() {
+            document.getElementById('actionModal').style.display = 'none';
+            activeActionData = null;
+        }
+
+        function viewHistory(id) {
+            activeModalStudentId = id;
+            const student = globalStudents[id];
+            if(!student) return;
+            
+            document.getElementById('modalTitle').innerText = `${student.name}'s Statement Ledger`;
+            switchHistoryTab('lessons');
+            
+            document.getElementById('historyModal').style.display = 'flex';
+        }
+
+        function switchHistoryTab(tabType) {
+            const student = globalStudents[activeModalStudentId];
+            if (!student) return;
+
+            document.getElementById('tab-lessons').classList.remove('active');
+            document.getElementById('tab-payments').classList.remove('active');
+            document.getElementById(`tab-${tabType}`).classList.add('active');
+
+            const listContainer = document.getElementById('historyList');
+            listContainer.innerHTML = '';
+
+            if (tabType === 'lessons') {
+                const datesArr = student.dates || [];
+                if (datesArr.length === 0) {
+                    listContainer.innerHTML = "<div style='color:#94a3b8; text-align:center; padding-top:24px; font-size:0.85rem;'>No documented class history arrays yet.</div>";
+                } else {
+                    const reverseHTML = datesArr.slice().reverse().map((dateStr, index) => {
+                        const realIndex = datesArr.length - index;
+                        const originalArrayIndex = datesArr.length - 1 - index;
+                        return `
+                            <div class="history-item">
+                                <span class="history-num">#${realIndex}</span> 
+                                <span style="font-size: 0.85rem; color: var(--text-muted); min-width: 45px;">Session:</span>
+                                <input type="date" class="ledger-date-input" value="${parseToISODate(dateStr)}" onchange="editLoggedDate('${activeModalStudentId}', ${originalArrayIndex}, this.value)">
+                                <button class="delete-btn" onclick="deleteLoggedDate('${activeModalStudentId}', ${originalArrayIndex})" title="Delete Entry Log" style="margin-left: auto; font-size: 1.1rem; padding: 0 4px;">×</button>
+                            </div>`;
+                    }).join('');
+                    listContainer.innerHTML = reverseHTML;
+                }
+            } else if (tabType === 'payments') {
+                const paymentsArr = student.payments || [];
+                if (paymentsArr.length === 0) {
+                    listContainer.innerHTML = "<div style='color:#94a3b8; text-align:center; padding-top:24px; font-size:0.85rem;'>No financial ledger events archived yet.</div>";
+                } else {
+                    let itemsHTML = [];
+                    for (let i = paymentsArr.length - 1; i >= 0; i--) {
+                        const payObj = paymentsArr[i];
+                        
+                        if (typeof payObj !== 'object') {
+                            itemsHTML.push(`<div class="history-item"><span class="history-num" style="color:var(--success-accent)">₹</span> <span>${payObj}</span></div>`);
+                            continue;
+                        }
+
+                        const currentAmt = payObj.amount !== undefined ? payObj.amount : (payObj.count * payObj.rateAtPayment);
+                        const currentParticulars = payObj.particulars || "";
+
+                        itemsHTML.push(`
+                            <div class="history-item" style="gap: 6px;">
+                                <span class="history-num" style="color:var(--success-accent); min-width:15px;">₹</span> 
+                                <input type="date" class="ledger-date-input" value="${parseToISODate(payObj.date)}" onchange="editPaymentDate('${activeModalStudentId}', ${i}, this.value)" title="Change Settlement Date">
+                                
+                                <span style="font-size:0.75rem; color:var(--text-muted)">Amt:</span>
+                                <input type="number" class="ledger-amount-input" min="0" value="${currentAmt}" onchange="editPaymentAmount('${activeModalStudentId}', ${i}, this.value)" title="Modify Paid Amount">
+                                
+                                <span style="font-size:0.75rem; color:var(--text-muted)">Part:</span>
+                                <input type="text" class="ledger-text-input" value="${currentParticulars}" placeholder="Particulars..." onchange="editPaymentParticulars('${activeModalStudentId}', ${i}, this.value)" title="Edit Transaction Details">
+                                
+                                <button class="share-btn" onclick="displayInvoiceSheet('${activeModalStudentId}', ${i})" title="View Executive Statement Invoice">📋</button>
+                                
+                                <button class="delete-btn" onclick="deletePaymentRecord('${activeModalStudentId}', ${i})" title="Delete Payment Record" style="margin-left: auto; font-size: 1.1rem; padding: 0 4px;">×</button>
+                            </div>`);
+                    }
+                    listContainer.innerHTML = itemsHTML.join('');
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('historyModal').style.display = 'none';
+            activeModalStudentId = null;
+        }
+
+        function saveGlobalStudents() {
+            try {
+                localStorage.setItem('tmt_students', JSON.stringify(globalStudents));
+            } catch(e) {}
+        }
+    </script>
+</body>
+</html>
