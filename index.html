@@ -2,11 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TheMusicTeacher - Ledger & Tracker</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="TMT Ledger">
     <style>
         :root {
             --bg-color: #f8f9fa;
@@ -29,35 +26,9 @@
             height: 100vh;
             display: flex;
             overflow: hidden;
-            position: relative;
         }
 
-        /* Mobile Layout Header Engine */
-        .mobile-header-bar {
-            display: none;
-            background: var(--panel-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 12px 16px;
-            align-items: center;
-            justify-content: space-between;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50px;
-            box-sizing: border-box;
-            z-index: 30;
-        }
-        .menu-toggle-trigger {
-            background: none;
-            border: none;
-            color: var(--primary-accent);
-            font-size: 1.4rem;
-            padding: 0;
-            cursor: pointer;
-        }
-
-        /* Sidebar Adaptive Drawer System */
+        /* Sidebar Styling */
         .sidebar {
             width: 320px;
             background: var(--panel-bg);
@@ -66,18 +37,8 @@
             flex-direction: column;
             padding: 24px;
             box-sizing: border-box;
-            z-index: 40;
+            z-index: 10;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar-overlay-mask {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.3);
-            backdrop-filter: blur(2px);
-            z-index: 35;
         }
 
         h1 {
@@ -121,9 +82,8 @@
             border-radius: 6px;
             outline: none;
             font-family: inherit;
-            font-size: 16px; 
+            font-size: 0.9rem;
             transition: border-color 0.2s, box-shadow 0.2s;
-            box-sizing: border-box;
         }
 
         input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
@@ -132,22 +92,22 @@
         }
 
         button {
-            padding: 12px 16px;
+            padding: 11px 16px;
             background: var(--primary-accent);
             color: #ffffff;
             border: 1px solid transparent;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 500;
             transition: all 0.2s ease;
-            min-height: 44px;
         }
 
         button:hover {
             background: #1a252f;
         }
 
+        /* Sync Gateway Button Styles */
         .sync-btn-outline {
             background: transparent;
             border: 1px solid var(--primary-accent);
@@ -164,7 +124,6 @@
             flex-direction: column;
             overflow: hidden;
             background: var(--bg-color);
-            box-sizing: border-box;
         }
 
         .dashboard-header {
@@ -190,6 +149,7 @@
             margin-left: 8px;
         }
 
+        /* Aggregated Financial Summary Badge */
         .global-summary-badge {
             font-size: 0.92rem;
             font-weight: 600;
@@ -214,7 +174,6 @@
             padding: 32px;
             overflow-y: auto;
             box-sizing: border-box;
-            -webkit-overflow-scrolling: touch;
         }
 
         .student-dashboard-grid {
@@ -257,9 +216,9 @@
             background: none;
             border: none;
             color: #94a3b8;
-            padding: 4px 8px;
+            padding: 0;
             margin: 0;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             line-height: 1;
             cursor: pointer;
             transition: color 0.15s;
@@ -295,8 +254,7 @@
             cursor: pointer;
             opacity: 0.6;
             transition: opacity 0.15s, transform 0.15s;
-            font-size: 1.1rem;
-            padding: 4px;
+            font-size: 0.95rem;
         }
 
         .calendar-icon:hover {
@@ -304,10 +262,11 @@
             transform: scale(1.1);
         }
 
+        /* Inline Card Rate Input Field */
         .card-rate-input {
             width: 70px;
-            padding: 4px 6px;
-            font-size: 15px;
+            padding: 3px 6px;
+            font-size: 0.82rem;
             font-weight: 600;
             color: var(--text-main);
             border: 1px solid #cbd5e1;
@@ -317,33 +276,44 @@
             text-align: center;
         }
 
-        /* Interactive Ledger Overhaul Styles */
+        .card-rate-input:focus {
+            border-color: var(--primary-accent);
+            background: #fdfdfd;
+        }
+
+        /* Interactive Ledger Date/Text Editor Inputs */
         .ledger-date-input, .ledger-amount-input, .ledger-text-input {
-            border: 1px solid #cbd5e1;
-            background: #f8fafc;
+            border: 1px solid transparent;
+            background: transparent;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 0.85rem;
             color: #475569;
-            padding: 4px 6px;
+            padding: 2px 6px;
             border-radius: 4px;
             outline: none;
+            transition: all 0.15s ease;
         }
-        .ledger-date-input { cursor: pointer; width: 110px; }
+
+        .ledger-date-input { cursor: pointer; width: 100px; }
         .ledger-amount-input { width: 60px; font-weight: 600; }
-        .ledger-text-input { width: 90px; }
+        .ledger-text-input { width: 95px; }
+
+        .ledger-date-input:hover, .ledger-date-input:focus,
+        .ledger-amount-input:hover, .ledger-amount-input:focus,
+        .ledger-text-input:hover, .ledger-text-input:focus {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
 
         .stat-btn {
             background: #ffffff;
             border: 1px solid #cbd5e1;
             color: var(--text-main);
-            padding: 6px 12px;
-            font-size: 0.8rem;
+            padding: 4px 10px;
+            font-size: 0.78rem;
             font-weight: 600;
             border-radius: 5px;
             cursor: pointer;
-            min-height: 36px;
-            display: inline-flex;
-            align-items: center;
             transition: all 0.15s;
         }
         
@@ -363,17 +333,21 @@
             border-color: var(--success-accent);
         }
 
+        /* Share Icon Button Style */
         .share-btn {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
+            background: none;
+            border: none;
             cursor: pointer;
-            padding: 6px 8px;
-            font-size: 1rem;
+            padding: 4px 6px;
+            font-size: 0.95rem;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 36px;
+            transition: background 0.15s;
+        }
+        .share-btn:hover {
+            background: #e2e8f0;
         }
 
         /* Modal Layout System */
@@ -386,8 +360,6 @@
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(4px);
-            padding: 12px;
-            box-sizing: border-box;
         }
 
         .modal-content {
@@ -395,14 +367,22 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            padding: 20px;
+            padding: 24px;
             width: 580px; 
-            max-width: 100%;
             color: var(--text-main);
             display: flex;
             flex-direction: column;
-            max-height: 85vh;
-            box-sizing: border-box;
+            max-height: 75vh;
+            transition: width 0.2s ease;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-accent);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
         }
 
         .modal-tabs {
@@ -413,12 +393,13 @@
         }
 
         .modal-tab {
-            padding: 8px 4px;
-            font-size: 0.9rem;
+            padding: 6px 4px;
+            font-size: 0.85rem;
             font-weight: 500;
             color: var(--text-muted);
             cursor: pointer;
             border-bottom: 2px solid transparent;
+            transition: all 0.15s;
         }
 
         .modal-tab.active {
@@ -429,146 +410,151 @@
 
         #historyList { 
             overflow-y: auto; 
-            margin-bottom: 16px; 
+            margin-bottom: 20px; 
             flex-grow: 1; 
-            -webkit-overflow-scrolling: touch;
         }
 
         .history-item { 
-            padding: 10px 0; 
+            padding: 8px 0; 
             border-bottom: 1px solid #f1f5f9; 
             color: #475569; 
             display: flex; 
             align-items: center;
-            flex-wrap: wrap;
             gap: 8px; 
             font-size: 0.88rem;
+        }
+
+        .history-num { 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            min-width: 25px; 
+        }
+
+        .modal-content button {
+            background: var(--primary-accent);
+            color: white;
+            border: none;
+        }
+
+        .modal-content button:hover {
+            background: #1a252f;
+        }
+
+        .modal-body-spacing {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-body-spacing label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px;
             color: var(--text-muted);
             border: 2px dashed var(--border-color);
             border-radius: 8px;
             background: #ffffff;
+            font-size: 0.95rem;
         }
 
-        /* Sophisticated Invoice Template Layout Elements */
+        /* Sophisticated Invoice Layout Styles */
         .invoice-paper {
             background: #ffffff;
-            padding: 20px;
+            padding: 32px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: #1e293b;
+            line-height: 1.5;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.01);
         }
         .invoice-brand-header {
             display: flex;
             justify-content: space-between;
             border-bottom: 2px solid var(--primary-accent);
-            padding-bottom: 12px;
-            margin-bottom: 16px;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
         }
         .invoice-title {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
             color: var(--primary-accent);
         }
         .invoice-meta-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        .invoice-meta-label {
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
         }
         .invoice-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
         }
         .invoice-table th {
             background: #f1f5f9;
             text-align: left;
-            padding: 6px 10px;
+            padding: 8px 12px;
+            font-weight: 600;
+            color: #475569;
             border-bottom: 1px solid #cbd5e1;
         }
-        .invoice-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+        .invoice-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
         .invoice-total-row {
             display: flex;
             justify-content: flex-end;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary-accent);
             border-top: 2px solid #cbd5e1;
-            padding-top: 8px;
+            padding-top: 12px;
         }
 
-        /* Responsive iPhone Adaptivity Framework CSS Rules */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-
-            .mobile-header-bar { display: flex; }
-
-            .sidebar {
-                position: fixed;
-                top: 0; left: 0; bottom: 0;
-                width: 280px;
-                transform: translateX(-100%);
-                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-            }
-            .sidebar.drawer-open { transform: translateX(0); }
-
-            .main-area { padding-top: 50px; height: 100%; }
-
-            .dashboard-header {
-                padding: 12px 16px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .global-summary-badge { width: 100%; justify-content: center; box-sizing: border-box; }
-
-            .tracker-grid-container { padding: 16px; }
-            .student-dashboard-grid { grid-template-columns: 1fr; }
-
-            .history-item {
-                display: grid;
-                grid-template-columns: auto 1fr auto;
-                gap: 8px;
-                padding: 12px 0;
-            }
-            .history-item > .delete-btn { grid-column: 3; justify-self: end; }
-            .ledger-text-input { width: 100%; grid-column: 1 / span 3; }
-        }
+        /* Scrollbars styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar-overlay-mask" id="sidebarMask" onclick="closeMobileDrawer()"></div>
-
-    <div class="mobile-header-bar">
-        <button class="menu-toggle-trigger" onclick="openMobileDrawer()">☰</button>
-        <div style="font-weight:600; font-size:0.95rem; color:var(--primary-accent); letter-spacing:0.5px;">THEMUSICTEACHER</div>
-        <div style="width:24px;"></div>
-    </div>
-
-    <div class="sidebar" id="appSidebar">
+    <div class="sidebar">
         <h1>Studio Ledger</h1>
         <div class="controls">
             <div class="control-group">
                 <label for="studentName">Add New Student</label>
                 <input type="text" id="studentName" placeholder="Enter full name..." onkeydown="handleKeyDown(event)">
             </div>
-            <button onclick="addStudentMobile()">Add Student to Roster</button>
+            <button onclick="addStudent()">Add Student to Roster</button>
             
             <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px;">
                 <label for="classRateInput">Default Rate for New Additions (Rs.)</label>
                 <input type="number" id="classRateInput" min="0" oninput="updateDefaultRate()">
             </div>
 
+            <!-- Integrated Cloud Storage Gateway Sync Mechanism UI Controllers -->
             <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px; gap: 8px;">
                 <label>Cloud Sync Gateway</label>
                 <button onclick="exportSyncData()" class="sync-btn-outline" title="Save file to iCloud or Google Drive">Export Cloud Backup</button>
@@ -587,10 +573,12 @@
         </div>
 
         <div class="tracker-grid-container">
-            <div class="student-dashboard-grid" id="studentGrid"></div>
+            <div class="student-dashboard-grid" id="studentGrid">
+                </div>
         </div>
     </div>
 
+    <!-- Main Statement History Modal Framework -->
     <div id="historyModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle">Student Ledger</h3>
@@ -599,20 +587,21 @@
                 <div class="modal-tab" id="tab-payments" onclick="switchHistoryTab('payments')">Payment History</div>
             </div>
             <div id="historyList"></div>
-            <button onclick="closeModal()" style="min-height:44px; width:100%;">Close Records</button>
+            <button onclick="closeModal()">Close Records</button>
         </div>
     </div>
 
+    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content" style="width: 540px; max-height: 85vh;">
             <h3>Statement Receipt Display</h3>
-            <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;"></div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: flex; gap: 10px;">
-                    <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
-                    <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
-                </div>
-                <button onclick="closeInvoiceModal()" style="background: #ffffff; color: var(--primary-accent); border: 1px solid #cbd5e1; min-height:44px;">Dismiss</button>
+            <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
+                <!-- Dynamically generated architectural paper element displays here -->
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
+                <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
+                <button onclick="closeInvoiceModal()" style="background: #ffffff; color: var(--primary-accent); border: 1px solid #cbd5e1;">Dismiss</button>
             </div>
         </div>
     </div>
@@ -641,21 +630,6 @@
         let activeActionData = null; 
         let defaultClassRate = 1200;
 
-        function openMobileDrawer() {
-            document.getElementById('appSidebar').classList.add('drawer-open');
-            document.getElementById('sidebarMask').style.display = 'block';
-        }
-
-        function closeMobileDrawer() {
-            document.getElementById('appSidebar').classList.remove('drawer-open');
-            document.getElementById('sidebarMask').style.display = 'none';
-        }
-
-        function addStudentMobile() {
-            addStudent();
-            closeMobileDrawer();
-        }
-
         try {
             globalStudents = JSON.parse(localStorage.getItem('tmt_students')) || {};
             defaultClassRate = parseInt(localStorage.getItem('tmt_default_rate')) || 1200;
@@ -670,7 +644,7 @@
 
         function handleKeyDown(event) {
             if (event.key === 'Enter') {
-                addStudentMobile();
+                addStudent();
             }
         }
 
@@ -759,7 +733,7 @@
                         </div>
                         <div class="stat-row">
                             <span style="color: ${data.unpaidClasses > 0 ? 'var(--warning-accent)' : 'var(--text-muted)'}; font-weight: ${data.unpaidClasses > 0 ? '600' : 'normal'}">
-                                Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong>
+                                Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong> (${data.unpaidClasses} cls)
                             </span>
                             <button class="stat-btn pay-btn" onclick="openPayClassModal('${id}')">Record Paid</button>
                         </div>
@@ -795,7 +769,7 @@
         }
 
         function deleteStudent(id) {
-            if(confirm(`Permanently remove all tracking accounts and payment metrics for ${globalStudents[id].name}?`)) {
+            if(confirm(`Permanently remove all tracking accounts and architectural payment metrics for ${globalStudents[id].name}?`)) {
                 delete globalStudents[id];
                 saveGlobalStudents();
                 renderStudents();
@@ -866,7 +840,7 @@
         function deletePaymentRecord(studentId, arrayIndex) {
             const student = globalStudents[studentId];
             if (student && student.payments && student.payments[arrayIndex]) {
-                if (confirm(`Permanently wipe this receipt log entry? Rolling this back balances your accounts instantly.`)) {
+                if (confirm(`Permanently wipe this receipt log entry? Rolling this back balances your active portfolio balances instantly.`)) {
                     student.payments.splice(arrayIndex, 1);
                     saveGlobalStudents();
                     renderStudents();
@@ -875,6 +849,7 @@
             }
         }
 
+        /* Sophisticated Multi-Mode Invoice Generation Framework */
         function displayInvoiceSheet(studentId, paymentIndex) {
             const student = globalStudents[studentId];
             if (!student || !student.payments || !student.payments[paymentIndex]) return;
@@ -892,7 +867,7 @@
 
             let tableRowsHTML = "";
             if (coveredLessonDates.length === 0) {
-                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">No session logs located.</td></tr>`;
+                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">No session date parameters historical logs located.</td></tr>`;
             } else {
                 tableRowsHTML = coveredLessonDates.map((date, index) => `
                     <tr>
@@ -911,7 +886,7 @@
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 0.85rem; font-weight: 700; color: #475569;">INVOICE RECORD</div>
-                            <div style="font-size: 0.75rem; color: #64748b;">Ref: #REC-${paymentIndex + 1}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Ref: #REC-${paymentIndex + 1}-${Date.now().toString().slice(-4)}</div>
                         </div>
                     </div>
                     
@@ -919,6 +894,7 @@
                         <div>
                             <div class="invoice-meta-label">Billed To:</div>
                             <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${student.name}</div>
+                            <div style="color: #64748b; font-size: 0.85rem;">Active Roster Profile Account</div>
                         </div>
                         <div style="text-align: right;">
                             <div class="invoice-meta-label">Payment Date / Mode:</div>
@@ -943,6 +919,10 @@
                         <span style="font-weight: 500; color: #64748b; font-size: 0.9rem; margin-right: 12px; align-self: center;">Total Settled Balance:</span>
                         Rs. ${payment.amount.toLocaleString('en-IN')}.00
                     </div>
+
+                    <div style="margin-top: 32px; border-top: 1px dashed #e2e8f0; padding-top: 16px; text-align: center; font-size: 0.8rem; color: #94a3b8; font-style: italic;">
+                        This document serves as verification of financial settlement regarding musical study sessions listed above. Thank you.
+                    </div>
                 </div>
             `;
 
@@ -955,16 +935,16 @@
                     <head>
                         <title>Invoice - ${student.name}</title>
                         <style>
-                            body { font-family: system-ui, sans-serif; padding: 20px; }
+                            body { font-family: system-ui, sans-serif; padding: 40px; }
                             .invoice-paper { background: white; color: #1e293b; }
-                            .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 16px; }
-                            .invoice-title { font-size: 1.25rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
-                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.85rem; }
+                            .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 16px; margin-bottom: 24px; }
+                            .invoice-title { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
+                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
                             .invoice-meta-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
-                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.85rem; }
-                            .invoice-table th { background: #f1f5f9; text-align: left; padding: 6px 10px; border-bottom: 1px solid #cbd5e1; }
-                            .invoice-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
-                            .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 8px; }
+                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.9rem; }
+                            .invoice-table th { background: #f1f5f9; text-align: left; padding: 8px 12px; border-bottom: 1px solid #cbd5e1; }
+                            .invoice-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+                            .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1.1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 12px; }
                         </style>
                     </head>
                     <body>
@@ -980,11 +960,11 @@
                 const rawStringText = 
 `🧾 *THEMUSICTEACHER PAYMENT RECEIPT*
 ---------------------------------------
-*Student:* ${student.name}
-*Date:* ${payment.date}
-*Amount:* Rs. ${payment.amount.toLocaleString('en-IN')}
-*Reference:* ${payment.particulars || "GPay/Online"}
-*Sessions:* ${payment.count} Class(es)
+*Student Account:* ${student.name}
+*Settlement Date:* ${payment.date}
+*Amount Cleared:* Rs. ${payment.amount.toLocaleString('en-IN')}
+*Reference Type:* ${payment.particulars || "GPay/Online"}
+*Total Sessions:* ${payment.count} Class(es)
 
 *Classes Accounted For:*
 ${coveredLessonDates.map((d, i) => `✓ Class #${startIdx + i + 1} (${d})`).join('\n')}
@@ -992,7 +972,7 @@ ${coveredLessonDates.map((d, i) => `✓ Class #${startIdx + i + 1} (${d})`).join
 Thank you for your continuous commitment to music practice!
 ---------------------------------------`;
                 navigator.clipboard.writeText(rawStringText).then(() => {
-                    alert("Text Receipt saved successfully to your clipboard!");
+                    alert("Sophisticated Text Receipt template saved successfully to your clipboard!");
                 });
             };
 
@@ -1003,6 +983,7 @@ Thank you for your continuous commitment to music practice!
             document.getElementById('invoiceModal').style.display = 'none';
         }
 
+        /* Cloud Sync Gateway Architecture Engines */
         function exportSyncData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
                 tmt_students: globalStudents,
@@ -1041,13 +1022,12 @@ Thank you for your continuous commitment to music practice!
                             } catch(err) {}
                             renderStudents();
                             alert("Sync data successfully hydrated into local storage container!");
-                            closeMobileDrawer();
                         }
                     } else {
-                        alert("Invalid sync file layout.");
+                        alert("Invalid sync file signature layout detected.");
                     }
                 } catch (err) {
-                    alert("Failure parsing configuration mapping arrays.");
+                    alert("Failure parsing transactional configuration mapping script variables.");
                 }
             };
             reader.readAsText(file);
@@ -1061,7 +1041,7 @@ Thank you for your continuous commitment to music practice!
             const targetDateStr = new Date().toLocaleDateString('en-GB');
 
             document.getElementById('actionTitle').innerText = `Log Lesson Session: ${student.name}`;
-            document.getElementById('actionLabel').innerText = "Select lesson completion date:";
+            document.getElementById('actionLabel').innerText = "Select specific lesson completion date:";
             document.getElementById('actionDatePicker').value = parseToISODate(targetDateStr);
             document.getElementById('actionParticularsGroup').style.display = 'none';
             
@@ -1076,13 +1056,13 @@ Thank you for your continuous commitment to music practice!
 
             const classesOwed = student.unpaidClasses;
             if (classesOwed === 0) {
-                alert("Outstanding arrears balances display zero.");
+                alert("This specific profile context exhibits zero outstanding arrears balances.");
                 return;
             }
 
             const totalAmountDue = classesOwed * student.rate;
             document.getElementById('actionTitle').innerText = `Record Transaction Receipt: ${student.name}`;
-            document.getElementById('actionLabel').innerText = `Select payment date for ${classesOwed} classes (Total: Rs. ${totalAmountDue.toLocaleString('en-IN')}):`;
+            document.getElementById('actionLabel').innerText = `Select date payment was received for ${classesOwed} classes (Total: Rs. ${totalAmountDue.toLocaleString('en-IN')} at Rs. ${student.rate}/cls):`;
             document.getElementById('actionDatePicker').value = new Date().toISOString().split('T')[0];
             
             document.getElementById('actionParticularsInput').value = '';
@@ -1098,7 +1078,7 @@ Thank you for your continuous commitment to music practice!
             
             const rawPickerValue = document.getElementById('actionDatePicker').value;
             if (!rawPickerValue) {
-                alert("Please select a valid calendar date map.");
+                alert("Please select a clear calendar date coordinate map.");
                 return;
             }
 
@@ -1164,9 +1144,9 @@ Thank you for your continuous commitment to music practice!
                         return `
                             <div class="history-item">
                                 <span class="history-num">#${realIndex}</span> 
-                                <span style="font-size: 0.85rem; color: var(--text-muted);">Session:</span>
+                                <span style="font-size: 0.85rem; color: var(--text-muted); min-width: 45px;">Session:</span>
                                 <input type="date" class="ledger-date-input" value="${parseToISODate(dateStr)}" onchange="editLoggedDate('${activeModalStudentId}', ${originalArrayIndex}, this.value)">
-                                <button class="delete-btn" onclick="deleteLoggedDate('${activeModalStudentId}', ${originalArrayIndex})" title="Delete Entry Log">×</button>
+                                <button class="delete-btn" onclick="deleteLoggedDate('${activeModalStudentId}', ${originalArrayIndex})" title="Delete Entry Log" style="margin-left: auto; font-size: 1.1rem; padding: 0 4px;">×</button>
                             </div>`;
                     }).join('');
                     listContainer.innerHTML = reverseHTML;
@@ -1189,16 +1169,19 @@ Thank you for your continuous commitment to music practice!
                         const currentParticulars = payObj.particulars || "";
 
                         itemsHTML.push(`
-                            <div class="history-item">
+                            <div class="history-item" style="gap: 6px;">
                                 <span class="history-num" style="color:var(--success-accent); min-width:15px;">₹</span> 
                                 <input type="date" class="ledger-date-input" value="${parseToISODate(payObj.date)}" onchange="editPaymentDate('${activeModalStudentId}', ${i}, this.value)" title="Change Settlement Date">
-                                <div>
-                                    <span style="font-size:0.75rem; color:var(--text-muted)">Amt:</span>
-                                    <input type="number" class="ledger-amount-input" min="0" value="${currentAmt}" onchange="editPaymentAmount('${activeModalStudentId}', ${i}, this.value)" title="Modify Paid Amount">
-                                </div>
-                                <input type="text" class="ledger-text-input" value="${currentParticulars}" placeholder="Particulars..." onchange="editPaymentParticulars('${activeModalStudentId}', ${i}, this.value)" title="Edit Details">
-                                <button class="share-btn" onclick="displayInvoiceSheet('${activeModalStudentId}', ${i})" title="View Invoice">📋</button>
-                                <button class="delete-btn" onclick="deletePaymentRecord('${activeModalStudentId}', ${i})" title="Delete Record">×</button>
+                                
+                                <span style="font-size:0.75rem; color:var(--text-muted)">Amt:</span>
+                                <input type="number" class="ledger-amount-input" min="0" value="${currentAmt}" onchange="editPaymentAmount('${activeModalStudentId}', ${i}, this.value)" title="Modify Paid Amount">
+                                
+                                <span style="font-size:0.75rem; color:var(--text-muted)">Part:</span>
+                                <input type="text" class="ledger-text-input" value="${currentParticulars}" placeholder="Particulars..." onchange="editPaymentParticulars('${activeModalStudentId}', ${i}, this.value)" title="Edit Transaction Details">
+                                
+                                <button class="share-btn" onclick="displayInvoiceSheet('${activeModalStudentId}', ${i})" title="View Executive Statement Invoice">📋</button>
+                                
+                                <button class="delete-btn" onclick="deletePaymentRecord('${activeModalStudentId}', ${i})" title="Delete Payment Record" style="margin-left: auto; font-size: 1.1rem; padding: 0 4px;">×</button>
                             </div>`);
                     }
                     listContainer.innerHTML = itemsHTML.join('');
