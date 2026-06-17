@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TheMusicTeacher - Ledger & Tracker</title>
-    <!-- Native iOS Immersive Web App Meta Configuration Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TMT Ledger">
@@ -114,7 +113,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* 16px font-size standard protects iOS browsers from forcing layout canvas zoom on tap focus */
         input[type="text"], input[type="number"], input[type="date"] {
             padding: 10px 12px;
             background: #ffffff;
@@ -143,7 +141,7 @@
             font-size: 0.9rem;
             font-weight: 500;
             transition: all 0.2s ease;
-            min-height: 44px; /* Native Apple Human Interface design threshold */
+            min-height: 44px;
         }
 
         button:hover {
@@ -216,7 +214,7 @@
             padding: 32px;
             overflow-y: auto;
             box-sizing: border-box;
-            -webkit-overflow-scrolling: touch; /* Smooth kinetic scroll inertia on iOS */
+            -webkit-overflow-scrolling: touch;
         }
 
         .student-dashboard-grid {
@@ -443,7 +441,7 @@
             display: flex; 
             align-items: center;
             flex-wrap: wrap;
-            gap: 6px; 
+            gap: 8px; 
             font-size: 0.88rem;
         }
 
@@ -549,10 +547,8 @@
 </head>
 <body>
 
-    <!-- Drawer Mask Element -->
     <div class="sidebar-overlay-mask" id="sidebarMask" onclick="closeMobileDrawer()"></div>
 
-    <!-- Collapsible Top Nav Bar layout for smart devices -->
     <div class="mobile-header-bar">
         <button class="menu-toggle-trigger" onclick="openMobileDrawer()">☰</button>
         <div style="font-weight:600; font-size:0.95rem; color:var(--primary-accent); letter-spacing:0.5px;">THEMUSICTEACHER</div>
@@ -595,7 +591,6 @@
         </div>
     </div>
 
-    <!-- Main Statement History Modal Framework -->
     <div id="historyModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle">Student Ledger</h3>
@@ -608,7 +603,6 @@
         </div>
     </div>
 
-    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content" style="width: 540px; max-height: 85vh;">
             <h3>Statement Receipt Display</h3>
@@ -647,7 +641,6 @@
         let activeActionData = null; 
         let defaultClassRate = 1200;
 
-        // Mobile Responsive Layout Display Toggles
         function openMobileDrawer() {
             document.getElementById('appSidebar').classList.add('drawer-open');
             document.getElementById('sidebarMask').style.display = 'block';
@@ -966,9 +959,9 @@
                             .invoice-paper { background: white; color: #1e293b; }
                             .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 16px; }
                             .invoice-title { font-size: 1.25rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
-                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: 0.85rem; }
+                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.85rem; }
                             .invoice-meta-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
-                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.85rem; }
+                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.85rem; }
                             .invoice-table th { background: #f1f5f9; text-align: left; padding: 6px 10px; border-bottom: 1px solid #cbd5e1; }
                             .invoice-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
                             .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 8px; }
@@ -985,7 +978,7 @@
 
             document.getElementById('invoiceCopyTextBtn').onclick = () => {
                 const rawStringText = 
-``🧾 *THEMUSICTEACHER PAYMENT RECEIPT*
+`🧾 *THEMUSICTEACHER PAYMENT RECEIPT*
 ---------------------------------------
 *Student:* ${student.name}
 *Date:* ${payment.date}
