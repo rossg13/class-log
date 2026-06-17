@@ -176,24 +176,36 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px; /* Increased separation */
         }
 
-        /* Search Filter Interface */
+        /* Search Filter Interface - Visual Upgrades */
         .search-wrapper {
             width: 100%;
-            max-width: 360px;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .search-wrapper label {
             font-size: 0.78rem;
-            color: var(--text-muted);
-            font-weight: 600;
+            color: var(--primary-accent);
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.7px;
+        }
+
+        .search-wrapper input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #a1a1aa;
+            background: #fafafa;
         }
 
         .student-dashboard-grid {
@@ -669,6 +681,7 @@
                 <label for="studentSearchInput">Filter Roster Name</label>
                 <input type="text" id="studentSearchInput" placeholder="Search active profiles..." oninput="renderStudents()">
             </div>
+            
             <div class="student-dashboard-grid" id="studentGrid">
                 </div>
         </div>
@@ -775,7 +788,6 @@
             const searchQuery = (document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
             const studentIds = Object.keys(globalStudents);
             
-            // Filter student keys depending on query match
             const filteredStudentIds = studentIds.filter(id => {
                 return globalStudents[id] && globalStudents[id].name.toLowerCase().includes(searchQuery);
             });
@@ -817,7 +829,6 @@
                 data.unpaidClasses = calculateUnpaidClasses(data);
                 runningTotalOutstanding += (data.unpaidClasses * data.rate);
 
-                // Render structure conditionally based on search query matching array lists
                 if (filteredStudentIds.includes(id)) {
                     const card = document.createElement('div');
                     card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
@@ -963,7 +974,6 @@
             }
         }
 
-        /* Sophisticated Multi-Mode Invoice Generation Framework */
         function displayInvoiceSheet(studentId, paymentIndex) {
             const student = globalStudents[studentId];
             if (!student || !student.payments || !student.payments[paymentIndex]) return;
