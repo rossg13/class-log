@@ -174,6 +174,26 @@
             padding: 32px;
             overflow-y: auto;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Search Filter Interface */
+        .search-wrapper {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .search-wrapper label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .student-dashboard-grid {
@@ -575,6 +595,9 @@
                 padding: 16px;
                 overflow-y: visible;
             }
+            .search-wrapper {
+                max-width: 100%;
+            }
             .student-dashboard-grid {
                 grid-template-columns: 1fr;
             }
@@ -642,6 +665,10 @@
         </div>
 
         <div class="tracker-grid-container">
+            <div class="search-wrapper">
+                <label for="studentSearchInput">Filter Roster Name</label>
+                <input type="text" id="studentSearchInput" placeholder="Search active profiles..." oninput="renderStudents()">
+            </div>
             <div class="student-dashboard-grid" id="studentGrid">
                 </div>
         </div>
@@ -745,7 +772,14 @@
             const gridContainer = document.getElementById('studentGrid');
             gridContainer.innerHTML = '';
             
+            const searchQuery = (document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
             const studentIds = Object.keys(globalStudents);
+            
+            // Filter student keys depending on query match
+            const filteredStudentIds = studentIds.filter(id => {
+                return globalStudents[id] && globalStudents[id].name.toLowerCase().includes(searchQuery);
+            });
+
             document.getElementById('rosterCount').innerText = `(${studentIds.length} Student${studentIds.length !== 1 ? 's' : ''} Total)`;
 
             let runningTotalOutstanding = 0;
@@ -762,9 +796,20 @@
                 return;
             }
 
+            if (filteredStudentIds.length === 0 && searchQuery !== '') {
+                gridContainer.innerHTML = `
+                    <div class="empty-state">
+                        <strong>No Filter Matches Found</strong><br>
+                        <span style="font-size: 0.85rem; color:#94a3b8; display:inline-block; margin-top:6px;">
+                            No portfolio records match the context parameter "${document.getElementById('studentSearchInput').value}".
+                        </span>
+                    </div>`;
+            }
+
             studentIds.forEach(id => {
                 const data = globalStudents[id];
-                
+                if (!data) return;
+
                 if (data.rate === undefined) {
                     data.rate = defaultClassRate;
                 }
@@ -772,40 +817,43 @@
                 data.unpaidClasses = calculateUnpaidClasses(data);
                 runningTotalOutstanding += (data.unpaidClasses * data.rate);
 
-                const card = document.createElement('div');
-                card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
-                
-                const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
+                // Render structure conditionally based on search query matching array lists
+                if (filteredStudentIds.includes(id)) {
+                    const card = document.createElement('div');
+                    card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
+                    
+                    const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
 
-                card.innerHTML = `
-                    <div class="card-header">
-                        <span>${data.name}</span>
-                        <button class="delete-btn" onclick="deleteStudent('${id}')" title="Remove Profile">×</button>
-                    </div>
-                    <div class="card-stats">
-                        <div class="stat-row">
-                            <span class="ledger-info-group">
-                                Rate (Rs.): 
-                                <input type="number" class="card-rate-input" min="0" value="${data.rate}" onchange="updateStudentSpecificRate('${id}', this)">
-                                / class
-                            </span>
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <span>${data.name}</span>
+                            <button class="delete-btn" onclick="deleteStudent('${id}')" title="Remove Profile">×</button>
                         </div>
-                        <div class="stat-row" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
-                            <div class="ledger-info-group">
-                                <span>Classes Logged: <strong>${data.totalClasses}</strong></span>
-                                <span class="calendar-icon" onclick="viewHistory('${id}')" title="Open Ledger View">📅</span>
+                        <div class="card-stats">
+                            <div class="stat-row">
+                                <span class="ledger-info-group">
+                                    Rate (Rs.): 
+                                    <input type="number" class="card-rate-input" min="0" value="${data.rate}" onchange="updateStudentSpecificRate('${id}', this)">
+                                    / class
+                                </span>
                             </div>
-                            <button class="stat-btn" onclick="openLogClassModal('${id}')">+1 Class</button>
+                            <div class="stat-row" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                                <div class="ledger-info-group">
+                                    <span>Classes Logged: <strong>${data.totalClasses}</strong></span>
+                                    <span class="calendar-icon" onclick="viewHistory('${id}')" title="Open Ledger View">📅</span>
+                                </div>
+                                <button class="stat-btn" onclick="openLogClassModal('${id}')">+1 Class</button>
+                            </div>
+                            <div class="stat-row">
+                                <span style="color: ${data.unpaidClasses > 0 ? 'var(--warning-accent)' : 'var(--text-muted)'}; font-weight: ${data.unpaidClasses > 0 ? '600' : 'normal'}">
+                                    Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong> (${data.unpaidClasses} cls)
+                                </span>
+                                <button class="stat-btn pay-btn" onclick="openPayClassModal('${id}')">Record Paid</button>
+                            </div>
                         </div>
-                        <div class="stat-row">
-                            <span style="color: ${data.unpaidClasses > 0 ? 'var(--warning-accent)' : 'var(--text-muted)'}; font-weight: ${data.unpaidClasses > 0 ? '600' : 'normal'}">
-                                Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong> (${data.unpaidClasses} cls)
-                            </span>
-                            <button class="stat-btn pay-btn" onclick="openPayClassModal('${id}')">Record Paid</button>
-                        </div>
-                    </div>
-                `;
-                gridContainer.appendChild(card);
+                    `;
+                    gridContainer.appendChild(card);
+                }
             });
 
             document.getElementById('globalOutstandingSum').innerText = `Rs. ${runningTotalOutstanding.toLocaleString('en-IN')}`;
@@ -1094,6 +1142,11 @@ Thank you for your continuous commitment to music practice!
                     }
                 } catch (err) {
                     alert("Failure parsing transactional configuration mapping script variables.");
+                }
+            };
+            reader.onloadend = function() {
+                if (document.getElementById('studentSearchInput')) {
+                    document.getElementById('studentSearchInput').value = '';
                 }
             };
             reader.readAsText(file);
