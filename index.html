@@ -536,6 +536,76 @@
         ::-webkit-scrollbar-track { background: var(--bg-color); }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* iPhone & Mobile Compatibility Overrides */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                height: auto;
+                padding: 16px;
+            }
+            h1 {
+                margin-bottom: 16px;
+                font-size: 1.15rem;
+            }
+            .main-area {
+                height: auto;
+                overflow: visible;
+            }
+            .dashboard-header {
+                padding: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .global-summary-badge {
+                width: 100%;
+                box-sizing: border-box;
+                justify-content: space-between;
+            }
+            .tracker-grid-container {
+                padding: 16px;
+                overflow-y: visible;
+            }
+            .student-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                width: 90% !important;
+                max-height: 85vh;
+                padding: 16px;
+            }
+            .history-item {
+                flex-wrap: wrap;
+                gap: 8px 4px;
+                padding: 12px 0;
+            }
+            .history-item input, .history-item span, .history-item button {
+                font-size: 0.8rem;
+            }
+            .ledger-date-input, .ledger-amount-input, .ledger-text-input {
+                background: #f8fafc;
+                border-color: #cbd5e1;
+            }
+            .invoice-paper {
+                padding: 16px;
+            }
+            .invoice-meta-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            #invoiceModal .modal-content > div:last-child {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -554,7 +624,6 @@
                 <input type="number" id="classRateInput" min="0" oninput="updateDefaultRate()">
             </div>
 
-            <!-- Integrated Cloud Storage Gateway Sync Mechanism UI Controllers -->
             <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px; gap: 8px;">
                 <label>Cloud Sync Gateway</label>
                 <button onclick="exportSyncData()" class="sync-btn-outline" title="Save file to iCloud or Google Drive">Export Cloud Backup</button>
@@ -578,7 +647,6 @@
         </div>
     </div>
 
-    <!-- Main Statement History Modal Framework -->
     <div id="historyModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle">Student Ledger</h3>
@@ -591,13 +659,11 @@
         </div>
     </div>
 
-    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content" style="width: 540px; max-height: 85vh;">
             <h3>Statement Receipt Display</h3>
             <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
-                <!-- Dynamically generated architectural paper element displays here -->
-            </div>
+                </div>
             <div style="display: flex; gap: 10px;">
                 <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
                 <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
