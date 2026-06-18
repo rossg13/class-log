@@ -134,12 +134,14 @@
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.01);
+            gap: 20px;
         }
 
         .dashboard-title {
             font-size: 1.2rem;
             font-weight: 600;
             color: var(--primary-accent);
+            flex-shrink: 0;
         }
 
         .dashboard-title span {
@@ -147,6 +149,28 @@
             color: var(--text-muted);
             font-size: 0.95rem;
             margin-left: 8px;
+        }
+
+        /* Top Bar Real-Time Filter Input Field */
+        .search-container {
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.06);
         }
 
         /* Aggregated Financial Summary Badge */
@@ -162,6 +186,7 @@
             align-items: center;
             gap: 6px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            flex-shrink: 0;
         }
 
         .global-summary-badge strong {
@@ -620,6 +645,10 @@
                 align-items: flex-start;
                 gap: 12px;
             }
+            .search-container {
+                width: 100%;
+                max-width: none;
+            }
             .global-summary-badge {
                 width: 100%;
                 box-sizing: border-box;
@@ -678,7 +707,6 @@
                 <input type="number" id="classRateInput" min="0" oninput="updateDefaultRate()">
             </div>
 
-            <!-- Integrated Cloud Storage Gateway Sync Mechanism UI Controllers -->
             <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px; gap: 8px;">
                 <label>Cloud Sync Gateway</label>
                 <button onclick="exportSyncData()" class="sync-btn-outline" title="Save file to iCloud or Google Drive">Export Cloud Backup</button>
@@ -691,6 +719,9 @@
     <div class="main-area">
         <div class="dashboard-header">
             <div class="dashboard-title">Active Matrix Roster <span id="rosterCount">(0 Students Total)</span></div>
+            <div class="search-container">
+                <input type="text" id="studentSearchInput" class="search-input" placeholder="Search student by name..." oninput="renderStudents()">
+            </div>
             <div class="global-summary-badge">
                 Total Portfolio Due: <strong id="globalOutstandingSum">Rs. 0</strong>
             </div>
@@ -702,7 +733,6 @@
         </div>
     </div>
 
-    <!-- Main Statement History Modal Framework -->
     <div id="historyModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle">Student Ledger</h3>
@@ -715,13 +745,11 @@
         </div>
     </div>
 
-    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content" style="width: 580px; max-height: 85vh;">
             <h3>Statement Display Window</h3>
             <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
-                <!-- Dynamically generated architectural paper element displays here -->
-            </div>
+                </div>
             <div style="display: flex; gap: 10px;">
                 <button id="invoicePrintBtn" style="flex: 1; background: #0f172a;">Print / Save PDF</button>
                 <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
@@ -748,7 +776,6 @@
         </div>
     </div>
 
-    <!-- Secondary Pop-Up Framework to select Online/Offline Terms for Pre-billing Invoice Generation -->
     <div id="invoiceTermsModal" class="modal-overlay">
         <div class="modal-content" style="width: 380px;">
             <h3>Generate Student Invoice</h3>
@@ -822,6 +849,15 @@
             gridContainer.innerHTML = '';
             
             const studentIds = Object.keys(globalStudents);
+            const searchInput = document.getElementById('studentSearchInput');
+            const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+            // Filter down ids based on real-time text input queries
+            const filteredStudentIds = studentIds.filter(id => {
+                const name = globalStudents[id].name || '';
+                return name.toLowerCase().includes(searchQuery);
+            });
+
             document.getElementById('rosterCount').innerText = `(${studentIds.length} Student${studentIds.length !== 1 ? 's' : ''} Total)`;
 
             let runningTotalOutstanding = 0;
@@ -838,21 +874,32 @@
                 return;
             }
 
+            if (filteredStudentIds.length === 0 && searchQuery !== '') {
+                gridContainer.innerHTML = `
+                    <div class="empty-state" style="border-style: solid;">
+                        <strong>No Matrix Profiles Found</strong><br>
+                        <span style="font-size: 0.85rem; color:#94a3b8; display:inline-block; margin-top:6px;">
+                            No matching metrics located for query configuration parameter: "${searchInput.value}".
+                        </span>
+                    </div>`;
+            }
+
             studentIds.forEach(id => {
                 const data = globalStudents[id];
-                
                 if (data.rate === undefined) {
                     data.rate = defaultClassRate;
                 }
-
                 data.unpaidClasses = calculateUnpaidClasses(data);
                 runningTotalOutstanding += (data.unpaidClasses * data.rate);
+            });
+
+            filteredStudentIds.forEach(id => {
+                const data = globalStudents[id];
+                const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
 
                 const card = document.createElement('div');
                 card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
                 
-                const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
-
                 card.innerHTML = `
                     <div class="card-header">
                         <span>${data.name}</span>
