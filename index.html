@@ -466,40 +466,6 @@
             min-width: 25px; 
         }
 
-        .modal-content button {
-            background: var(--primary-accent);
-            color: white;
-            border: none;
-        }
-
-        .modal-content button:hover {
-            background: #1a252f;
-        }
-
-        .modal-body-spacing {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .modal-body-spacing label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px;
-            color: var(--text-muted);
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            background: #ffffff;
-            font-size: 0.95rem;
-        }
-
         /* Classy Executive Minimalist Invoice Redesign Layout Styles */
         .invoice-paper {
             background: #ffffff;
@@ -852,18 +818,22 @@
             const searchInput = document.getElementById('studentSearchInput');
             const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-            // Filter down ids based on real-time text input queries
-            const filteredStudentIds = studentIds.filter(id => {
-                const name = globalStudents[id].name || '';
-                return name.toLowerCase().includes(searchQuery);
-            });
-
-            document.getElementById('rosterCount').innerText = `(${studentIds.length} Student${studentIds.length !== 1 ? 's' : ''} Total)`;
-
             let runningTotalOutstanding = 0;
 
+            // First pass: Calculate running portfolio parameters safely
+            studentIds.forEach(id => {
+                const data = globalStudents[id];
+                if (data.rate === undefined) {
+                    data.rate = defaultClassRate;
+                }
+                data.unpaidClasses = calculateUnpaidClasses(data);
+                runningTotalOutstanding += (data.unpaidClasses * data.rate);
+            });
+
+            document.getElementById('globalOutstandingSum').innerText = `Rs. ${runningTotalOutstanding.toLocaleString('en-IN')}`;
+            document.getElementById('rosterCount').innerText = `(${studentIds.length} Student${studentIds.length !== 1 ? 's' : ''} Total)`;
+
             if (studentIds.length === 0) {
-                document.getElementById('globalOutstandingSum').innerText = "Rs. 0";
                 gridContainer.innerHTML = `
                     <div class="empty-state">
                         <strong>No Active Accounts Found</strong><br>
@@ -874,6 +844,12 @@
                 return;
             }
 
+            // Second pass: Filter active roster down based on real-time text query parameters
+            const filteredStudentIds = studentIds.filter(id => {
+                const name = globalStudents[id].name || '';
+                return name.toLowerCase().includes(searchQuery);
+            });
+
             if (filteredStudentIds.length === 0 && searchQuery !== '') {
                 gridContainer.innerHTML = `
                     <div class="empty-state" style="border-style: solid;">
@@ -882,17 +858,10 @@
                             No matching metrics located for query configuration parameter: "${searchInput.value}".
                         </span>
                     </div>`;
+                return;
             }
 
-            studentIds.forEach(id => {
-                const data = globalStudents[id];
-                if (data.rate === undefined) {
-                    data.rate = defaultClassRate;
-                }
-                data.unpaidClasses = calculateUnpaidClasses(data);
-                runningTotalOutstanding += (data.unpaidClasses * data.rate);
-            });
-
+            // Third pass: Render filtered parameters to viewport containers
             filteredStudentIds.forEach(id => {
                 const data = globalStudents[id];
                 const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
@@ -933,8 +902,6 @@
                 `;
                 gridContainer.appendChild(card);
             });
-
-            document.getElementById('globalOutstandingSum').innerText = `Rs. ${runningTotalOutstanding.toLocaleString('en-IN')}`;
         }
 
         function addStudent() {
