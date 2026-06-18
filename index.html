@@ -475,71 +475,114 @@
             font-size: 0.95rem;
         }
 
-        /* Sophisticated Invoice Layout Styles */
+        /* Classy Executive Minimalist Invoice Redesign Layout Styles */
         .invoice-paper {
             background: #ffffff;
-            padding: 32px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #1e293b;
-            line-height: 1.5;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.01);
+            line-height: 1.6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         }
         .invoice-brand-header {
             display: flex;
             justify-content: space-between;
-            border-bottom: 2px solid var(--primary-accent);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            align-items: flex-start;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 24px;
+            margin-bottom: 28px;
         }
         .invoice-title {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #0f172a;
+        }
+        .invoice-badge-label {
+            font-size: 0.72rem;
+            font-weight: 700;
             letter-spacing: 1px;
-            color: var(--primary-accent);
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .invoice-badge-paid {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .invoice-badge-due {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #ffedd5;
         }
         .invoice-meta-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 24px;
+            margin-bottom: 32px;
             font-size: 0.9rem;
         }
+        .invoice-meta-column {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
         .invoice-meta-label {
-            color: #64748b;
+            color: #94a3b8;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
+            font-size: 0.72rem;
+            letter-spacing: 0.8px;
+            margin-bottom: 2px;
         }
         .invoice-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 24px;
-            font-size: 0.9rem;
+            margin-bottom: 32px;
+            font-size: 0.88rem;
         }
         .invoice-table th {
-            background: #f1f5f9;
+            background: #f8fafc;
             text-align: left;
-            padding: 8px 12px;
+            padding: 12px 14px;
             font-weight: 600;
             color: #475569;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
             border-bottom: 1px solid #cbd5e1;
         }
         .invoice-table td {
-            padding: 10px 12px;
+            padding: 14px;
             border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+        .invoice-table tr:nth-child(even) td {
+            background: #fafafa;
         }
         .invoice-total-row {
             display: flex;
             justify-content: flex-end;
-            font-size: 1.1rem;
+            align-items: center;
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--primary-accent);
-            border-top: 2px solid #cbd5e1;
-            padding-top: 12px;
+            color: #0f172a;
+            padding-top: 16px;
+            margin-top: 12px;
+        }
+        .invoice-total-label {
+            font-weight: 500;
+            color: #64748b;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 16px;
         }
 
         /* Scrollbars styling */
@@ -607,11 +650,11 @@
                 border-color: #cbd5e1;
             }
             .invoice-paper {
-                padding: 16px;
+                padding: 20px;
             }
             .invoice-meta-grid {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 16px;
             }
             #invoiceModal .modal-content > div:last-child {
                 flex-direction: column;
@@ -674,13 +717,13 @@
 
     <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
-        <div class="modal-content" style="width: 540px; max-height: 85vh;">
-            <h3>Statement Receipt Display</h3>
+        <div class="modal-content" style="width: 580px; max-height: 85vh;">
+            <h3>Statement Display Window</h3>
             <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
                 <!-- Dynamically generated architectural paper element displays here -->
             </div>
             <div style="display: flex; gap: 10px;">
-                <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
+                <button id="invoicePrintBtn" style="flex: 1; background: #0f172a;">Print / Save PDF</button>
                 <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
                 <button onclick="closeInvoiceModal()" style="background: #ffffff; color: var(--primary-accent); border: 1px solid #cbd5e1;">Dismiss</button>
             </div>
@@ -951,7 +994,7 @@
             }
         }
 
-        /* Sophisticated Multi-Mode Invoice Generation Framework */
+        /* Classy Elegant Redesign: Multi-Mode Invoice Generation Framework */
         function displayInvoiceSheet(studentId, paymentIndex) {
             const student = globalStudents[studentId];
             if (!student || !student.payments || !student.payments[paymentIndex]) return;
@@ -969,12 +1012,12 @@
 
             let tableRowsHTML = "";
             if (coveredLessonDates.length === 0) {
-                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">No session date parameters historical logs located.</td></tr>`;
+                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">No session parameters located in logs.</td></tr>`;
             } else {
                 tableRowsHTML = coveredLessonDates.map((date, index) => `
                     <tr>
-                        <td><strong>Class #${startIdx + index + 1}</strong></td>
-                        <td>Session Attendance Completed: ${date}</td>
+                        <td style="font-weight: 600; width: 30%;">Class #${startIdx + index + 1}</td>
+                        <td>Session Attendance Completed — ${date}</td>
                     </tr>
                 `).join('');
             }
@@ -984,31 +1027,31 @@
                     <div class="invoice-brand-header">
                         <div>
                             <div class="invoice-title">TheMusicTeacher</div>
-                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Premium Music Instruction & Mentorship</div>
+                            <div style="font-size: 0.82rem; color: #64748b; margin-top: 4px; font-weight: 500;">Premium Music Instruction & Mentorship</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #475569;">INVOICE RECORD</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Ref: #REC-${paymentIndex + 1}-${Date.now().toString().slice(-4)}</div>
+                            <span class="invoice-badge-label invoice-badge-paid">Payment Received</span>
+                            <div style="font-size: 0.78rem; color: #94a3b8; font-family: monospace;">Ref: #REC-${paymentIndex + 1}-${Date.now().toString().slice(-4)}</div>
                         </div>
                     </div>
                     
                     <div class="invoice-meta-grid">
-                        <div>
-                            <div class="invoice-meta-label">Billed To:</div>
-                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${student.name}</div>
-                            <div style="color: #64748b; font-size: 0.85rem;">Active Roster Profile Account</div>
+                        <div class="invoice-meta-column">
+                            <span class="invoice-meta-label">Billed To</span>
+                            <div style="font-weight: 600; color: #0f172a; font-size: 1rem;">${student.name}</div>
+                            <div style="color: #64748b; font-size: 0.8rem;">Active Student Profile Account</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div class="invoice-meta-label">Payment Date / Mode:</div>
-                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${payment.date}</div>
-                            <div style="color: var(--success-accent); font-weight: 600; font-size: 0.85rem;">${payment.particulars || "Verified Receipt"}</div>
+                        <div class="invoice-meta-column" style="text-align: right;">
+                            <span class="invoice-meta-label">Receipt Summary</span>
+                            <div style="font-weight: 600; color: #0f172a;">Date: ${payment.date}</div>
+                            <div style="color: #27ae60; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px;">Method: ${payment.particulars || "Verified Receipt"}</div>
                         </div>
                     </div>
 
                     <table class="invoice-table">
                         <thead>
                             <tr>
-                                <th style="width: 35%;">Particulars</th>
+                                <th>Particulars</th>
                                 <th>Item Description</th>
                             </tr>
                         </thead>
@@ -1018,11 +1061,11 @@
                     </table>
 
                     <div class="invoice-total-row">
-                        <span style="font-weight: 500; color: #64748b; font-size: 0.9rem; margin-right: 12px; align-self: center;">Total Settled Balance:</span>
+                        <span class="invoice-total-label">Total Settled Balance</span>
                         Rs. ${payment.amount.toLocaleString('en-IN')}.00
                     </div>
 
-                    <div style="margin-top: 32px; border-top: 1px dashed #e2e8f0; padding-top: 16px; text-align: center; font-size: 0.8rem; color: #94a3b8; font-style: italic;">
+                    <div style="margin-top: 40px; border-top: 1px dashed #e2e8f0; padding-top: 20px; text-align: center; font-size: 0.78rem; color: #94a3b8; font-style: italic; letter-spacing: 0.2px;">
                         This document serves as verification of financial settlement regarding musical study sessions listed above. Thank you.
                     </div>
                 </div>
@@ -1037,16 +1080,20 @@
                     <head>
                         <title>Invoice - ${student.name}</title>
                         <style>
-                            body { font-family: system-ui, sans-serif; padding: 40px; }
+                            body { font-family: -apple-system, system-ui, sans-serif; padding: 40px; background: #fff; }
                             .invoice-paper { background: white; color: #1e293b; }
-                            .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 16px; margin-bottom: 24px; }
-                            .invoice-title { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
-                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
-                            .invoice-meta-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
-                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.9rem; }
-                            .invoice-table th { background: #f1f5f9; text-align: left; padding: 8px 12px; border-bottom: 1px solid #cbd5e1; }
-                            .invoice-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
-                            .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1.1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 12px; }
+                            .invoice-brand-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #e2e8f0; padding-bottom: 24px; margin-bottom: 28px; }
+                            .invoice-title { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #0f172a; }
+                            .invoice-badge-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+                            .invoice-badge-paid { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; font-size: 0.9rem; }
+                            .invoice-meta-label { color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.8px; margin-bottom: 2px; }
+                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 0.88rem; }
+                            .invoice-table th { background: #f8fafc; text-align: left; padding: 12px 14px; font-weight: 600; color: #475569; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; border-bottom: 1px solid #cbd5e1; }
+                            .invoice-table td { padding: 14px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+                            .invoice-table tr:nth-child(even) td { background: #fafafa; }
+                            .invoice-total-row { display: flex; justify-content: flex-end; align-items: center; font-size: 1.3rem; font-weight: 700; color: #0f172a; padding-top: 16px; margin-top: 12px; }
+                            .invoice-total-label { font-weight: 500; color: #64748b; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 16px; }
                         </style>
                     </head>
                     <body>
@@ -1081,7 +1128,7 @@ Thank you for your continuous commitment to music practice!
             document.getElementById('invoiceModal').style.display = 'flex';
         }
 
-        /* Dedicated System to construct Pre-Billing Invoices from Outstanding Classes Balance */
+        /* Dedicated System to construct Classy Pre-Billing Invoices from Outstanding Classes Balance */
         function openInvoiceTermsModal(id) {
             const student = globalStudents[id];
             if (!student) return;
@@ -1113,13 +1160,13 @@ Thank you for your continuous commitment to music practice!
             const coveredLessonDates = (student.dates || []).slice(totalPaidCount, totalPaidCount + outstandingClasses);
             let tableRowsHTML = coveredLessonDates.map((date, index) => `
                 <tr>
-                    <td><strong>Class #${totalPaidCount + index + 1}</strong></td>
-                    <td>Pending Statement Settlement: ${date}</td>
+                    <td style="font-weight: 600; width: 30%;">Class #${totalPaidCount + index + 1}</td>
+                    <td>Pending Statement Settlement — ${date}</td>
                 </tr>
             `).join('');
 
             if (coveredLessonDates.length === 0) {
-                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">Unbilled active completion tracks empty.</td></tr>`;
+                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">Unbilled completion entries are empty.</td></tr>`;
             }
 
             const invoiceHTML = `
@@ -1127,31 +1174,31 @@ Thank you for your continuous commitment to music practice!
                     <div class="invoice-brand-header">
                         <div>
                             <div class="invoice-title">TheMusicTeacher</div>
-                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Premium Music Instruction & Mentorship</div>
+                            <div style="font-size: 0.82rem; color: #64748b; margin-top: 4px; font-weight: 500;">Premium Music Instruction & Mentorship</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #e67e22;">OUTSTANDING STATEMENT</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Ref: #INV-${outstandingClasses}-${Date.now().toString().slice(-4)}</div>
+                            <span class="invoice-badge-label invoice-badge-due">Outstanding Statement</span>
+                            <div style="font-size: 0.78rem; color: #94a3b8; font-family: monospace;">Ref: #INV-${outstandingClasses}-${Date.now().toString().slice(-4)}</div>
                         </div>
                     </div>
                     
                     <div class="invoice-meta-grid">
-                        <div>
-                            <div class="invoice-meta-label">Billed To:</div>
-                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${student.name}</div>
-                            <div style="color: #64748b; font-size: 0.85rem;">Active Roster Profile Account</div>
+                        <div class="invoice-meta-column">
+                            <span class="invoice-meta-label">Billed To</span>
+                            <div style="font-weight: 600; color: #0f172a; font-size: 1rem;">${student.name}</div>
+                            <div style="color: #64748b; font-size: 0.8rem;">Active Student Profile Account</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div class="invoice-meta-label">Date of Issue / Request Layout:</div>
-                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${currentDateStr}</div>
-                            <div style="color: var(--warning-accent); font-weight: 600; font-size: 0.85rem;">Remittance: ${paymentTerms}</div>
+                        <div class="invoice-meta-column" style="text-align: right;">
+                            <span class="invoice-meta-label">Issue Parameters</span>
+                            <div style="font-weight: 600; color: #0f172a;">Date of Issue: ${currentDateStr}</div>
+                            <div style="color: #64748b; font-size: 0.82rem;">Instruction Studio Roster</div>
                         </div>
                     </div>
 
                     <table class="invoice-table">
                         <thead>
                             <tr>
-                                <th style="width: 35%;">Particulars</th>
+                                <th>Particulars</th>
                                 <th>Item Description</th>
                             </tr>
                         </thead>
@@ -1161,11 +1208,11 @@ Thank you for your continuous commitment to music practice!
                     </table>
 
                     <div class="invoice-total-row">
-                        <span style="font-weight: 500; color: #64748b; font-size: 0.9rem; margin-right: 12px; align-self: center;">Total Balance Owed:</span>
+                        <span class="invoice-total-label">Total Balance Owed</span>
                         Rs. ${totalDue.toLocaleString('en-IN')}.00
                     </div>
 
-                    <div style="margin-top: 32px; border-top: 1px dashed #e2e8f0; padding-top: 16px; text-align: center; font-size: 0.8rem; color: #94a3b8; font-style: italic;">
+                    <div style="margin-top: 40px; border-top: 1px dashed #e2e8f0; padding-top: 20px; text-align: center; font-size: 0.78rem; color: #94a3b8; font-style: italic; letter-spacing: 0.2px;">
                         Please complete payment execution using your preferred route selection configuration listed above. Thank you.
                     </div>
                 </div>
@@ -1180,16 +1227,20 @@ Thank you for your continuous commitment to music practice!
                     <head>
                         <title>Billing Invoice - ${student.name}</title>
                         <style>
-                            body { font-family: system-ui, sans-serif; padding: 40px; }
+                            body { font-family: -apple-system, system-ui, sans-serif; padding: 40px; background: #fff; }
                             .invoice-paper { background: white; color: #1e293b; }
-                            .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 16px; margin-bottom: 24px; }
-                            .invoice-title { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
-                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
-                            .invoice-meta-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
-                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.9rem; }
-                            .invoice-table th { background: #f1f5f9; text-align: left; padding: 8px 12px; border-bottom: 1px solid #cbd5e1; }
-                            .invoice-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
-                            .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1.1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 12px; }
+                            .invoice-brand-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #e2e8f0; padding-bottom: 24px; margin-bottom: 28px; }
+                            .invoice-title { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #0f172a; }
+                            .invoice-badge-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+                            .invoice-badge-due { background: #fff7ed; color: #9a3412; border: 1px solid #ffedd5; }
+                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; font-size: 0.9rem; }
+                            .invoice-meta-label { color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.8px; margin-bottom: 2px; }
+                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 0.88rem; }
+                            .invoice-table th { background: #f8fafc; text-align: left; padding: 12px 14px; font-weight: 600; color: #475569; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; border-bottom: 1px solid #cbd5e1; }
+                            .invoice-table td { padding: 14px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+                            .invoice-table tr:nth-child(even) td { background: #fafafa; }
+                            .invoice-total-row { display: flex; justify-content: flex-end; align-items: center; font-size: 1.3rem; font-weight: 700; color: #0f172a; padding-top: 16px; margin-top: 12px; }
+                            .invoice-total-label { font-weight: 500; color: #64748b; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 16px; }
                         </style>
                     </head>
                     <body>
