@@ -174,38 +174,6 @@
             padding: 32px;
             overflow-y: auto;
             box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            gap: 24px; /* Increased separation */
-        }
-
-        /* Search Filter Interface - Visual Upgrades */
-        .search-wrapper {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: #ffffff;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .search-wrapper label {
-            font-size: 0.78rem;
-            color: var(--primary-accent);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.7px;
-        }
-
-        .search-wrapper input[type="text"] {
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #a1a1aa;
-            background: #fafafa;
         }
 
         .student-dashboard-grid {
@@ -363,6 +331,17 @@
             background: var(--success-accent); 
             color: #ffffff; 
             border-color: var(--success-accent);
+        }
+
+        .invoice-btn {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .invoice-btn:hover {
+            background: #3498db;
+            color: #ffffff;
+            border-color: #3498db;
         }
 
         /* Share Icon Button Style */
@@ -607,9 +586,6 @@
                 padding: 16px;
                 overflow-y: visible;
             }
-            .search-wrapper {
-                max-width: 100%;
-            }
             .student-dashboard-grid {
                 grid-template-columns: 1fr;
             }
@@ -659,6 +635,7 @@
                 <input type="number" id="classRateInput" min="0" oninput="updateDefaultRate()">
             </div>
 
+            <!-- Integrated Cloud Storage Gateway Sync Mechanism UI Controllers -->
             <div class="control-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 16px; gap: 8px;">
                 <label>Cloud Sync Gateway</label>
                 <button onclick="exportSyncData()" class="sync-btn-outline" title="Save file to iCloud or Google Drive">Export Cloud Backup</button>
@@ -677,16 +654,12 @@
         </div>
 
         <div class="tracker-grid-container">
-            <div class="search-wrapper">
-                <label for="studentSearchInput">Filter Roster Name</label>
-                <input type="text" id="studentSearchInput" placeholder="Search active profiles..." oninput="renderStudents()">
-            </div>
-            
             <div class="student-dashboard-grid" id="studentGrid">
                 </div>
         </div>
     </div>
 
+    <!-- Main Statement History Modal Framework -->
     <div id="historyModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle">Student Ledger</h3>
@@ -699,11 +672,13 @@
         </div>
     </div>
 
+    <!-- Secondary Modal Layout specifically engineered to present the Sophisticated Invoice Document -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content" style="width: 540px; max-height: 85vh;">
             <h3>Statement Receipt Display</h3>
             <div id="invoiceModalBody" style="overflow-y: auto; margin-bottom: 20px; flex-grow: 1;">
-                </div>
+                <!-- Dynamically generated architectural paper element displays here -->
+            </div>
             <div style="display: flex; gap: 10px;">
                 <button id="invoicePrintBtn" style="flex: 1; background: var(--success-accent);">Print / Save PDF</button>
                 <button id="invoiceCopyTextBtn" style="flex: 1; background: #7f8c8d;">Copy Messenger Text</button>
@@ -726,6 +701,24 @@
             <div style="display: flex; gap: 10px;">
                 <button id="actionConfirmBtn" style="flex: 1;">Confirm Entry</button>
                 <button onclick="closeActionModal()" style="flex: 1; background: #ffffff; color: var(--primary-accent); border: 1px solid var(--primary-accent);">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Pop-Up Framework to select Online/Offline Terms for Pre-billing Invoice Generation -->
+    <div id="invoiceTermsModal" class="modal-overlay">
+        <div class="modal-content" style="width: 380px;">
+            <h3>Generate Student Invoice</h3>
+            <div class="modal-body-spacing">
+                <label for="invoiceTermsMode">Select Preferred Remittance Terms:</label>
+                <select id="invoiceTermsMode" style="padding: 10px 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: var(--text-main); font-family: inherit; font-size: 0.9rem;">
+                    <option value="Online (GPay / Bank Transfer)">Online (GPay / Bank Transfer)</option>
+                    <option value="Offline Remittance (Cash)">Offline Remittance (Cash)</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="invoiceTermsConfirmBtn" style="flex: 1; background: #3498db; color: #ffffff;">Create Statement</button>
+                <button onclick="document.getElementById('invoiceTermsModal').style.display='none'" style="flex: 1; background: #ffffff; color: var(--text-main); border: 1px solid #cbd5e1;">Cancel</button>
             </div>
         </div>
     </div>
@@ -785,13 +778,7 @@
             const gridContainer = document.getElementById('studentGrid');
             gridContainer.innerHTML = '';
             
-            const searchQuery = (document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
             const studentIds = Object.keys(globalStudents);
-            
-            const filteredStudentIds = studentIds.filter(id => {
-                return globalStudents[id] && globalStudents[id].name.toLowerCase().includes(searchQuery);
-            });
-
             document.getElementById('rosterCount').innerText = `(${studentIds.length} Student${studentIds.length !== 1 ? 's' : ''} Total)`;
 
             let runningTotalOutstanding = 0;
@@ -808,20 +795,9 @@
                 return;
             }
 
-            if (filteredStudentIds.length === 0 && searchQuery !== '') {
-                gridContainer.innerHTML = `
-                    <div class="empty-state">
-                        <strong>No Filter Matches Found</strong><br>
-                        <span style="font-size: 0.85rem; color:#94a3b8; display:inline-block; margin-top:6px;">
-                            No portfolio records match the context parameter "${document.getElementById('studentSearchInput').value}".
-                        </span>
-                    </div>`;
-            }
-
             studentIds.forEach(id => {
                 const data = globalStudents[id];
-                if (!data) return;
-
+                
                 if (data.rate === undefined) {
                     data.rate = defaultClassRate;
                 }
@@ -829,42 +805,43 @@
                 data.unpaidClasses = calculateUnpaidClasses(data);
                 runningTotalOutstanding += (data.unpaidClasses * data.rate);
 
-                if (filteredStudentIds.includes(id)) {
-                    const card = document.createElement('div');
-                    card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
-                    
-                    const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
+                const card = document.createElement('div');
+                card.className = `student-card ${data.unpaidClasses > 0 ? 'unpaid-warning' : ''}`;
+                
+                const dynamicDueAmount = (data.unpaidClasses * data.rate).toLocaleString('en-IN');
 
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <span>${data.name}</span>
-                            <button class="delete-btn" onclick="deleteStudent('${id}')" title="Remove Profile">×</button>
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>${data.name}</span>
+                        <button class="delete-btn" onclick="deleteStudent('${id}')" title="Remove Profile">×</button>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="ledger-info-group">
+                                Rate (Rs.): 
+                                <input type="number" class="card-rate-input" min="0" value="${data.rate}" onchange="updateStudentSpecificRate('${id}', this)">
+                                / class
+                            </span>
                         </div>
-                        <div class="card-stats">
-                            <div class="stat-row">
-                                <span class="ledger-info-group">
-                                    Rate (Rs.): 
-                                    <input type="number" class="card-rate-input" min="0" value="${data.rate}" onchange="updateStudentSpecificRate('${id}', this)">
-                                    / class
-                                </span>
+                        <div class="stat-row" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                            <div class="ledger-info-group">
+                                <span>Classes Logged: <strong>${data.totalClasses}</strong></span>
+                                <span class="calendar-icon" onclick="viewHistory('${id}')" title="Open Ledger View">📅</span>
                             </div>
-                            <div class="stat-row" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
-                                <div class="ledger-info-group">
-                                    <span>Classes Logged: <strong>${data.totalClasses}</strong></span>
-                                    <span class="calendar-icon" onclick="viewHistory('${id}')" title="Open Ledger View">📅</span>
-                                </div>
-                                <button class="stat-btn" onclick="openLogClassModal('${id}')">+1 Class</button>
-                            </div>
-                            <div class="stat-row">
-                                <span style="color: ${data.unpaidClasses > 0 ? 'var(--warning-accent)' : 'var(--text-muted)'}; font-weight: ${data.unpaidClasses > 0 ? '600' : 'normal'}">
-                                    Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong> (${data.unpaidClasses} cls)
-                                </span>
+                            <button class="stat-btn" onclick="openLogClassModal('${id}')">+1 Class</button>
+                        </div>
+                        <div class="stat-row">
+                            <span style="color: ${data.unpaidClasses > 0 ? 'var(--warning-accent)' : 'var(--text-muted)'}; font-weight: ${data.unpaidClasses > 0 ? '600' : 'normal'}">
+                                Outstanding Due: <strong>Rs. ${dynamicDueAmount}</strong> (${data.unpaidClasses} cls)
+                            </span>
+                            <div style="display: flex; gap: 4px;">
+                                <button class="stat-btn invoice-btn" onclick="openInvoiceTermsModal('${id}')" title="Generate Invoice Statement">📄</button>
                                 <button class="stat-btn pay-btn" onclick="openPayClassModal('${id}')">Record Paid</button>
                             </div>
                         </div>
-                    `;
-                    gridContainer.appendChild(card);
-                }
+                    </div>
+                `;
+                gridContainer.appendChild(card);
             });
 
             document.getElementById('globalOutstandingSum').innerText = `Rs. ${runningTotalOutstanding.toLocaleString('en-IN')}`;
@@ -974,6 +951,7 @@
             }
         }
 
+        /* Sophisticated Multi-Mode Invoice Generation Framework */
         function displayInvoiceSheet(studentId, paymentIndex) {
             const student = globalStudents[studentId];
             if (!student || !student.payments || !student.payments[paymentIndex]) return;
@@ -1103,6 +1081,153 @@ Thank you for your continuous commitment to music practice!
             document.getElementById('invoiceModal').style.display = 'flex';
         }
 
+        /* Dedicated System to construct Pre-Billing Invoices from Outstanding Classes Balance */
+        function openInvoiceTermsModal(id) {
+            const student = globalStudents[id];
+            if (!student) return;
+            if (student.unpaidClasses === 0) {
+                alert("This specific profile context exhibits zero outstanding ledger parameters to bill.");
+                return;
+            }
+            
+            document.getElementById('invoiceTermsModal').style.display = 'flex';
+            document.getElementById('invoiceTermsConfirmBtn').onclick = () => {
+                const preferredTerms = document.getElementById('invoiceTermsMode').value;
+                document.getElementById('invoiceTermsModal').style.display = 'none';
+                generatePreBillingInvoice(id, preferredTerms);
+            };
+        }
+
+        function generatePreBillingInvoice(id, paymentTerms) {
+            const student = globalStudents[id];
+            const outstandingClasses = student.unpaidClasses;
+            const rate = student.rate;
+            const totalDue = outstandingClasses * rate;
+            const currentDateStr = new Date().toLocaleDateString('en-GB');
+
+            let totalPaidCount = 0;
+            if (student.payments) {
+                student.payments.forEach(p => totalPaidCount += (parseInt(p.count) || 0));
+            }
+
+            const coveredLessonDates = (student.dates || []).slice(totalPaidCount, totalPaidCount + outstandingClasses);
+            let tableRowsHTML = coveredLessonDates.map((date, index) => `
+                <tr>
+                    <td><strong>Class #${totalPaidCount + index + 1}</strong></td>
+                    <td>Pending Statement Settlement: ${date}</td>
+                </tr>
+            `).join('');
+
+            if (coveredLessonDates.length === 0) {
+                tableRowsHTML = `<tr><td colspan="2" style="color:#94a3b8; text-align:center;">Unbilled active completion tracks empty.</td></tr>`;
+            }
+
+            const invoiceHTML = `
+                <div class="invoice-paper" id="printableInvoiceArea">
+                    <div class="invoice-brand-header">
+                        <div>
+                            <div class="invoice-title">TheMusicTeacher</div>
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Premium Music Instruction & Mentorship</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #e67e22;">OUTSTANDING STATEMENT</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Ref: #INV-${outstandingClasses}-${Date.now().toString().slice(-4)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-meta-grid">
+                        <div>
+                            <div class="invoice-meta-label">Billed To:</div>
+                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${student.name}</div>
+                            <div style="color: #64748b; font-size: 0.85rem;">Active Roster Profile Account</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="invoice-meta-label">Date of Issue / Request Layout:</div>
+                            <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${currentDateStr}</div>
+                            <div style="color: var(--warning-accent); font-weight: 600; font-size: 0.85rem;">Remittance: ${paymentTerms}</div>
+                        </div>
+                    </div>
+
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">Particulars</th>
+                                <th>Item Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRowsHTML}
+                        </tbody>
+                    </table>
+
+                    <div class="invoice-total-row">
+                        <span style="font-weight: 500; color: #64748b; font-size: 0.9rem; margin-right: 12px; align-self: center;">Total Balance Owed:</span>
+                        Rs. ${totalDue.toLocaleString('en-IN')}.00
+                    </div>
+
+                    <div style="margin-top: 32px; border-top: 1px dashed #e2e8f0; padding-top: 16px; text-align: center; font-size: 0.8rem; color: #94a3b8; font-style: italic;">
+                        Please complete payment execution using your preferred route selection configuration listed above. Thank you.
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('invoiceModalBody').innerHTML = invoiceHTML;
+
+            document.getElementById('invoicePrintBtn').onclick = () => {
+                const invoicePrintWindow = window.open('', '_blank');
+                invoicePrintWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Billing Invoice - ${student.name}</title>
+                        <style>
+                            body { font-family: system-ui, sans-serif; padding: 40px; }
+                            .invoice-paper { background: white; color: #1e293b; }
+                            .invoice-brand-header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 16px; margin-bottom: 24px; }
+                            .invoice-title { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; color: #2c3e50; }
+                            .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; font-size: 0.9rem; }
+                            .invoice-meta-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+                            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 0.9rem; }
+                            .invoice-table th { background: #f1f5f9; text-align: left; padding: 8px 12px; border-bottom: 1px solid #cbd5e1; }
+                            .invoice-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+                            .invoice-total-row { display: flex; justify-content: flex-end; font-size: 1.1rem; font-weight: 700; color: #2c3e50; border-top: 2px solid #cbd5e1; padding-top: 12px; }
+                        </style>
+                    </head>
+                    <body>
+                        ${document.getElementById('printableInvoiceArea').innerHTML}
+                        <script>window.print(); window.close();<\/script>
+                    </body>
+                    </html>
+                `);
+                invoicePrintWindow.document.close();
+            };
+
+            document.getElementById('invoiceCopyTextBtn').onclick = () => {
+                const rawStringText = 
+`🧾 *THEMUSICTEACHER BILLING STATEMENT*
+---------------------------------------
+*Student Account:* ${student.name}
+*Statement Date:* ${currentDateStr}
+*Total Sessions:* ${outstandingClasses} Owed Class(es)
+*Current Rate:* Rs. ${rate} / class
+*Payment Route:* ${paymentTerms}
+
+---------------------------------------
+*TOTAL OUTSTANDING DUE: Rs. ${totalDue.toLocaleString('en-IN')}.00*
+---------------------------------------
+
+*Classes Accounted For:*
+${coveredLessonDates.map((d, i) => `• Class #${totalPaidCount + i + 1} (${d})`).join('\n')}
+
+Please review the completion metrics listed above. Kindly balance records via your designated selection at your earliest convenience. Thank you!
+---------------------------------------`;
+                navigator.clipboard.writeText(rawStringText).then(() => {
+                    alert("Pre-billing statement saved successfully to clipboard!");
+                });
+            };
+
+            document.getElementById('invoiceModal').style.display = 'flex';
+        }
+
         function closeInvoiceModal() {
             document.getElementById('invoiceModal').style.display = 'none';
         }
@@ -1152,11 +1277,6 @@ Thank you for your continuous commitment to music practice!
                     }
                 } catch (err) {
                     alert("Failure parsing transactional configuration mapping script variables.");
-                }
-            };
-            reader.onloadend = function() {
-                if (document.getElementById('studentSearchInput')) {
-                    document.getElementById('studentSearchInput').value = '';
                 }
             };
             reader.readAsText(file);
